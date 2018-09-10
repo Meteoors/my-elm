@@ -1,0 +1,15 @@
+//blue
+$blue: #3190e8;
+$bc: #e4e4e4;
+
+//上下居中
+@mixin ct {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+@mixin wh($width, $height){
+    height: $height;
+    width: $width;
+}
