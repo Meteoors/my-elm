@@ -9,7 +9,22 @@ $bc: #e4e4e4;
     transform: translateY(-50%);
 }
 
+//上下左右居中
+@mixin center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+//盒子宽度和高度
 @mixin wh($width, $height){
     height: $height;
     width: $width;
+}
+
+//字体大小和颜色
+@mixin sc($size, $color){
+    font-size: $size;
+    color: $color;
 }

@@ -12,3 +12,13 @@ export const hotCity = () => fetch('/v1/cities', {type: 'hot'});
 
 //获取所有城市
 export const groupCity = () => fetch('/v1/cities', {type: 'group'});
+
+//获取当前所选城市信息
+export const currentcity = id => fetch('/v1/cities/' + id);
+
+//搜索地址
+export const searchplace = (id, address) => fetch('/v1/pois', {
+    city_id: id,
+    keyword: address,
+    type: 'search'
+});

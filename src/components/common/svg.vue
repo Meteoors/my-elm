@@ -8,6 +8,9 @@
 
             <symbol viewBox="0 0 1024 1024" id="arrow-right" class="icon"><path d="M716.298 417.341l-.01.01L307.702 7.23l-94.295 94.649 408.591 410.117-408.591 410.137 94.295 94.639 502.891-504.76z" class="selected"></path></symbol>
 
+            <symbol viewBox="0 0 14 14" id="arrow-left">
+			<path d="M0 0 L8 7 L0 14"  stroke="#fff" stroke-width="1" fill="none"/>
+			</symbol>
         </defs>
     </svg>
 </template>

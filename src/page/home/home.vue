@@ -9,31 +9,33 @@
             <span class='right'>定位不准时，请在城市列表中选择</span>
         </div>
 
-        <div class='city_guess'>
+        <router-link :to="'/city/' + guessid" class='city_guess' tag='div'>
             <span class='left'>{{guessCity}}</span>
             <svg class='right'>
                 <use xlink:href='#arrow-right'></use>
             </svg>
-        </div>
+        </router-link>
 
         <div class='hot'>
             <div class='title'>热门城市</div>
             <ul class='hot_list clear'>
-                <li class='hot_item' v-for='item in hotCity'>{{item}}</li>
+                <router-link :to="'/city/' + item.id" tag='li' class='hot_item' v-for='(item, index) in hotCity' :key='index'>
+                    {{item.name}}
+                </router-link>
             </ul>
         </div>
 
         <div class='group'>
             <ul>
-                <li>
-
-                    <div class='title'>A
-                        <span class='explain'>（按字母排序）</span>
+                <li v-for='(group, key, index) in groupCity' :key='key'>
+                    <div class='title'>{{key}}
+                        <span class='explain' v-if='index == 0'>（按字母排序）</span>
                     </div>
                     <ul class='group_list clear'>
-                        <li class='group_item' v-for='item in hotCity'>{{item}}</li>
+                        <router-link :to="'/city/' + city.id" tag='li' class='group_item' v-for='(city, index) in group' :key='index' >
+                            {{city.name}}
+                        </router-link>
                     </ul>
-
                 </li>
             </ul>        
         </div>
@@ -41,7 +43,7 @@
 </template>
 
 <script>
-    import headTop from '../../components/header.vue'
+    import headTop from '../../components/head/header.vue'
     import {cityGuess, hotCity, groupCity} from '../../service/getData'
 
     export default {
@@ -49,25 +51,27 @@
             return {
                 guessCity:'广州',
                 hotCity: ['上海','北京','广州','杭州','成都','重庆','深圳'],
-                groupCity: ['上海','北京','广州','杭州','成都','重庆','深圳']
+                groupCity: ['上海','北京','广州','杭州','成都','重庆','深圳'],
+                guessid: 0
             }
         },
-        // created() {
-        //     //获取当前城市
-        //     cityGuess().then(res => {
-        //         this.guessCity = res.name;
-        //     })
+        created() {
+            //获取当前城市
+            cityGuess().then(res => {
+                this.guessCity = res.name;
+                this.guessid = res.id;
+            })
 
-        //     //获取热门城市
-        //     hotCity().then(res => {
-        //         this.hotCity = res;
-        //     })
+            //获取热门城市
+            hotCity().then(res => {
+                this.hotCity = res;
+            })
 
-        //     //获取所有城市
-        //     groupCity().then(res => {
-        //         this.groupCity = res;
-        //     })
-        // },
+            //获取所有城市
+            groupCity().then(res => {
+                this.groupCity = res;
+            })
+        },
         components: {
             headTop
         },
