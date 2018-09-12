@@ -5,6 +5,9 @@ export const getStore = name => {
 }
 
 export const setStore = (name, value) => {
+    if (typeof value !== 'string'){
+        value = JSON.stringify(value);
+    }
     window.localStorage.setItem(name, value);
 }
 

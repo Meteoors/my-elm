@@ -10,7 +10,7 @@
         </router-link>
 
         <div class='back' v-if='goBack' @click='$router.go(-1)'>
-            <svg class='arrow_left' width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" version="1.1">
+            <svg class='arrow_left' xmlns="http://www.w3.org/2000/svg" version="1.1">
                 <polyline points="12,18 4,9 12,0" style="fill:none;stroke:rgb(255,255,255);stroke-width:2"/>
             </svg>
         </div>
@@ -20,6 +20,10 @@
         </div>
         
         <slot name='changeCity'></slot>
+
+        <slot name='search'></slot>
+
+        <slot name='msite-title'></slot>
     </header>
 </template>
 
@@ -80,9 +84,10 @@
         .back{
             @include ct;
             left: 0.4rem;
+            @include wh(1rem, 1rem);
             .arrow_left{
                 fill: #fff;
-                @include wh(1.5rem, 1.5rem);
+                @include wh(100%, 100%);
             }
         }
 

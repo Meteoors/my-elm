@@ -26,13 +26,13 @@
         </div>
 
         <div class='group'>
-            <ul>
-                <li v-for='(group, key, index) in groupCity' :key='key'>
+            <ul class='group_ul'>
+                <li class='group_li' v-for='(group, key, index) in sortGroup' :key='key'>
                     <div class='title'>{{key}}
                         <span class='explain' v-if='index == 0'>（按字母排序）</span>
                     </div>
-                    <ul class='group_list clear'>
-                        <router-link :to="'/city/' + city.id" tag='li' class='group_item' v-for='(city, index) in group' :key='index' >
+                    <ul class='item_ul clear'>
+                        <router-link :to="'/city/' + city.id" tag='li' class='item_li ellipsis' v-for='(city, index) in group' :key='index' >
                             {{city.name}}
                         </router-link>
                     </ul>
@@ -51,7 +51,7 @@
             return {
                 guessCity:'广州',
                 hotCity: ['上海','北京','广州','杭州','成都','重庆','深圳'],
-                groupCity: ['上海','北京','广州','杭州','成都','重庆','深圳'],
+                groupCity: {},
                 guessid: 0
             }
         },
@@ -72,6 +72,18 @@
                 this.groupCity = res;
             })
         },
+        computed: {
+            //所有城市按字母排序
+            sortGroup () {
+                if (!Object.keys(this.groupCity).length) return;
+                let sortKey = Object.keys(this.groupCity).sort();
+                let obj = {};
+                for(let i=0; i<sortKey.length; i++){
+                    obj[sortKey[i]] = this.groupCity[sortKey[i]];
+                }
+                return obj;
+            }
+        },
         components: {
             headTop
         },
@@ -87,12 +99,6 @@
     @import '../../style/mixin.scss';
 
     .home{
-        position: fixed;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        z-index: 0;
         background-color: #f5f5f5;
 
         .logo{
@@ -173,9 +179,7 @@
         }
 
         .group{
-            margin-top: 0.4rem;
             font-size: 0.6rem;
-            background-color: #fff;
             border-top: 1px solid $bc;
             .title{
                 height: 1.6rem;
@@ -186,7 +190,15 @@
                     color: #999;
                 }
             }
-            .group_list{
+
+            .group_li{
+                margin-top: 0.4rem;
+                border-top: 1px solid $bc;
+                border-bottom: 1px solid $bc;
+                background-color: #fff;
+            }
+
+            .item_ul{
                 li{
                     line-height: 1.8rem;
                     height: 1.8rem;

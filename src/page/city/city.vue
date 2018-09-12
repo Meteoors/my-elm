@@ -32,7 +32,7 @@
     export default {
         data() {
             return {
-                cityname: '广州', //当前城市名字
+                cityname: '', //当前城市名字
                 cityid: '',  //当前城市id
                 inputAddress: '', //搜索地址
                 historyTitle: true, //默认显示搜索历史头部，点击搜索后隐藏
@@ -46,7 +46,9 @@
 
             currentcity(this.cityid).then(res => {
                 this.cityname = res.name;
-            })            
+            });
+            
+            this.init();
         },
         components: {
             headTop
@@ -56,6 +58,8 @@
             init () {
                 if (getStore('placeHistory')) {
                     this.placelist = JSON.parse(getStore('placeHistory'));
+                }else{
+                    this.placelist = [];
                 }
             },
             //搜索地址
@@ -90,7 +94,7 @@
                 }
 
                 setStore('placeHistory', this.placeHistory) //重置缓存
-                this.$routere.push({path: '/msite', query: {geohash}}); //下一页
+                this.$router.push({path: '/msite', query: {geohash}}); //下一页
             },
             //从缓存里清除搜索历史，更新页面
             clearAll() {
@@ -118,25 +122,28 @@
             background-color: #fff;
             border-top: 1px solid $bc;
             border-bottom: 1px solid $bc;
-            padding: 0.4rem 0.65rem;
+            padding: 0.4rem 5%;
             .input{
                 width: 100%;
-                height: 1.5rem;
+                height: 1.45rem;
                 line-height: 1.5rem;
                 border: 1px solid $bc;
                 margin-bottom: 0.4rem;
                 @include sc(0.65rem, #333);
+                border-radius: 0.1rem;
+                text-indent: 0.3rem;
             }
             .submit{
                 background-color: $blue;
-                @include wh(100%, 1.5rem);
+                @include wh(100%, 1.45rem);
                 @include sc(0.65rem, #fff);
+                border-radius: 0.1rem;
             }
         }
 
         .title{
             font-size: 0.6rem;
-            line-height: 0.8rem;
+            line-height: 0.85rem;
             padding-left: 0.5rem;
             border-bottom: 1px solid $bc;
         }
@@ -145,16 +152,16 @@
             background: #fff;
             li{
                 border-bottom: 1px solid $bc;
-                padding: 0.3rem 0.65rem;
+                padding: 0.4rem 0.7rem;
                 .place_name{
                     @include sc(0.65rem, #333);
-                    height: 1rem;
-                    line-height: 1rem;
+                    height: 1.3rem;
+                    line-height: 1.3rem;
                 }
                 .place_address{
                     @include sc(0.45rem, #999);
-                    height: 0.8ren;
-                    line-height: 0.8rem;
+                    height: 1rem;
+                    line-height: 1rem;
                 }
             }
         }
