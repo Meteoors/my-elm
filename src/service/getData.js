@@ -22,3 +22,15 @@ export const searchplace = (id, address) => fetch('/v1/pois', {
     keyword: address,
     type: 'search'
 });
+
+//获取msite页面地址信息
+export const msiteAddress = (geohash) => fetch('/v2/pois/' + geohash);
+
+//获取msite页面食品分类列表
+export const msiteFoodTypes = () => fetch('/v2/index_entry');
+
+//获取商家列表
+export const shopList = (latitude, longtitude) => fetch('/shopping/restaurants', {
+    latitude,
+    longtitude
+})

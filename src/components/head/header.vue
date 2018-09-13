@@ -73,7 +73,7 @@
 
             .login_entry{
                 color: #fff;
-                font-size: 0.6rem;
+                font-size: 0.65rem;
             }
             .user_avator{
                 fill: #fff;

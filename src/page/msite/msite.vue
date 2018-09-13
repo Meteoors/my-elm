@@ -8,7 +8,7 @@
 	    		</svg>
             </router-link>
 
-            <router-link to='/home' slot='msite-title' class='title'>
+            <router-link to='/home' slot='msite-title' class='title ellipsis'>
                 <span class='title_text ellipsis'>{{address}}</span>
             </router-link>
         </head-top>
@@ -44,9 +44,11 @@
 </template>
 
 <script>
-    import '../../plugin/swiper.min.js'
+    import '../../plugins/swiper.min.js'
     import '../../style/swiper.min.css'
-    import {msiteAddress, msiteFoodTypes} from '../../service/getData'
+    import headTop from '../../components/head/header'
+    import {msiteAddress, msiteFoodTypes, cityGuess} from '../../service/getData'
+    import {mapMutations} from 'vuex'
 
 
     export default {
@@ -59,13 +61,22 @@
             }
         },
         async created () {
-            this.geohash = this.$route.query.geohash;
-            let res = await msiteAddress();
-            this.address = res.name; //根据url查询地址名称
+            if(!this.$route.query.geohash){
+                let address = await cityGuess();
+                this.geohash = address.latitude + ',' + address.longitude;
+            }else{
+                this.geohash = this.$route.query.geohash; //从url取出geohash           
+            }
+            this.SAVE_GEOHASH(this.geohash); //geohash存入vuex
+
+            let res = await msiteAddress(this.geohash);
+            this.address = res.name; //根据geohash详细定位，取得地址名称
+
+            this.RECORD_ADDRESS(res); //latitude,longitude存入vuex
         },
         mounted () {
-            msiteFoodTypes(this.geohash).then(res => {
-                let time = res.length % 8;
+            msiteFoodTypes().then(res => {
+                let time = Math.floor(res.length/8);
                 let arr = [];
                 for(var i=0; i<time; i++){
                     arr[i] = res.splice(0, 8);
@@ -75,24 +86,32 @@
                 }
                 this.foodType = arr;
             }).then(() => {
-                new Swiper('.swiper-container'), {
+                new Swiper('.swiper-container', {
                     pagination: '.swiper-pagination',
                     loop: true
-                }
+                })
             })
+        },
+        components: {
+            headTop
+        },
+        methods: {
+            ...mapMutations([
+                'RECORD_ADDRESS', 'SAVE_GEOHASH'
+            ])
         }
 
     }
 </script>
 
-<style lang='scss'>
+<style lang='scss' scoped>
     @import '../../style/mixin';
 
     #msite{
         padding-top: 2.1rem;
 
         .search{
-            @include wh(1.5rem, 1.5rem);
+            @include wh(0.9rem, 0.95rem);    
             @include ct;
             left: .8rem;
         }
@@ -100,16 +119,73 @@
             width: 50%;
             @include center;
             text-align: center;
+            color: #fff;
+            line-height: 1rem;
+            margin-left: -.5rem;
             .title_text{
-                @include sc(1rem, #fff);
+                @include sc(0.8rem, #fff);
             }
         }
 
         .nav{
-            height: 8.5rem;
+            height: 8.65rem;
             background: #fff;
+            padding-top: 0.1rem;
             border-bottom: 1px solid $bc;
             margin-bottom: .4rem;
+            .swiper-container{
+                // height: 8.1rem;
+                padding-bottom: 0.6rem;
+                overflow: hidden;
+                position: relative;
+                .swiper-wrapper{
+                    height: 7.5rem;
+                    .swiper-slide{
+                        height: 7.5rem;
+                        display: flex;
+                        flex-wrap: wrap;
+                        .food{
+                            @include wh(25%, 3.75rem);
+                            padding: 0.3rem 0;
+                            .food_img{
+                                @include wh(1.8rem, 1.8rem);
+                                display: block;
+                                margin:0 auto;
+                                margin-bottom: 0.5rem;
+                            }
+                            .food_title{
+                                line-height: 0.8rem;
+                                font-size: 0.6rem;
+                                color: #666;
+                                text-align: center;
+                            }
+                        }
+                    }
+                }
+                .swiper-pagination{
+                    position: absolute;
+                    bottom: 0.2rem;
+                }
+            }
+        }
+
+        .shoplist_container{
+            border-top: 1px solid $bc;
+            background-color: #fff;
+            .shoplist_head{
+                .shop_icon{
+                    vertical-align: middle;
+                    margin-left:.6rem;
+                    fill: #999;
+                    @include wh(.6rem, .6rem);
+                }
+                span{
+                    color: #999;
+                    font-size: .6rem;
+                    line-height: 1.6rem;
+                }
+            }
+            
         }
     }
 </style>

@@ -49,8 +49,8 @@
     export default {
         data() {
             return {
-                guessCity:'广州',
-                hotCity: ['上海','北京','广州','杭州','成都','重庆','深圳'],
+                guessCity:'',
+                hotCity: [],
                 groupCity: {},
                 guessid: 0
             }
