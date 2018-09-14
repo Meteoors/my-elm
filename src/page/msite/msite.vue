@@ -37,7 +37,7 @@
                 <span>附近商家</span>
             </header>
 
-            <!-- <shop-list></shop-list> -->
+            <shop-list></shop-list>
         </div>
 
     </div>
@@ -47,8 +47,9 @@
     import '../../plugins/swiper.min.js'
     import '../../style/swiper.min.css'
     import headTop from '../../components/head/header'
+    import shopList from '../../components/common/shoplist'
     import {msiteAddress, msiteFoodTypes, cityGuess} from '../../service/getData'
-    import {mapMutations} from 'vuex'
+    import {mapMutations, mapState} from 'vuex'
 
 
     export default {
@@ -68,8 +69,7 @@
                 this.geohash = this.$route.query.geohash; //从url取出geohash           
             }
             this.SAVE_GEOHASH(this.geohash); //geohash存入vuex
-
-            let res = await msiteAddress(this.geohash);
+            let res = await msiteAddress(this.geohash);     //等待回应时子组件shoplist的created已经开始使用vuex的latitude和longitude
             this.address = res.name; //根据geohash详细定位，取得地址名称
 
             this.RECORD_ADDRESS(res); //latitude,longitude存入vuex
@@ -92,8 +92,14 @@
                 })
             })
         },
+        computed: {
+            ...mapState([
+                'longitude', 'latitude'
+            ])
+        },
         components: {
-            headTop
+            headTop,
+            shopList
         },
         methods: {
             ...mapMutations([

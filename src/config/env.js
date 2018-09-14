@@ -4,6 +4,9 @@ let baseUrl = ''
 
 baseUrl = '//elm.cangdu.org'
 
+let imgBaseUrl = '//elm.cangdu.org/img/'
+
 export {
-    baseUrl
+    baseUrl,
+    imgBaseUrl
 }

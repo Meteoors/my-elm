@@ -7,7 +7,7 @@
                 </div>
                 <div class='detail'>
                     <div class='top'>
-                        <h4 class='ellipsis'>{{shop.name}}</h4>
+                        <h4 class='ellipsis' :class="{premium: shop.is_premium}">{{shop.name}}</h4>
                         <ul class='support_ul'>
                             <li class='support_li' v-for='(support, index) in shop.supports' :key='index'>
                                 {{support.icon_name}}
@@ -18,7 +18,7 @@
                         <div class='left'>
                             <!-- <star :score='shop.rating'></star> -->
                             <span class='score'>{{shop.rating}}</span>
-                            <span class='sell'>月售{{shop.recent_order_num}}单</span>
+                            <div class='sell'>月售{{shop.recent_order_num}}单</div>
                         </div>
                         <div class='right'>
                             <span class='delivery' v-if='shop.delivery_mode'>{{shop.delivery_mode.text}}</span>
@@ -26,7 +26,7 @@
                         </div>
                     </div>
                     <div class='bottom'>
-                        <div class='left'>￥{{shop.float_minimum_order_amount}}起送/{{shop.piecewise_agent_fee.tips}}</div>
+                        <div class='left'>￥{{shop.float_minimum_order_amount}}起送/{{shop.piecewise_agent_fee.tips}} </div>
                         <div class='right'>
                             <span class='distance'>{{shop.distance}}/</span>
                             <span class='time'>{{shop.order_lead_time}}</span>
@@ -47,11 +47,13 @@
     export default {
         data () {
             return {
-                shoplist: []  //店铺列表数据
+                shoplist: [],  //店铺列表数据
+                imgBaseUrl
             }
         },
         created () {
-            this.init();
+            this.init();    //此时父组件msite可能还未将longitude、latitude存入vuex，导致不能正确获得shoplist数据
+                            //解决方法是用侦听器watch监视vuex里属性的变化，并重新获取数据
         },
         props: ['geohash'],
         computed: {
@@ -61,7 +63,11 @@
         },
         methods: {
             async init () {
-                this.shoplist = await shopList(this.latitude, this.longitude)
+                if (!this.latitude||!this.longitude) return;    //先判断经纬度是否为空再请求数据
+                
+                let res = await shopList(this.latitude, this.longitude);
+                this.shoplist = res;
+                console.log(this.shoplist);
             },
             intime (supports) {
                 let intime = false;
@@ -74,6 +80,11 @@
                 }
                 return intime;
             }
+        },
+        watch: {
+            longitude: function(val){   //longitude变化时重新获取数据
+                this.init();
+            }
         }
     }
 </script>
@@ -83,6 +94,7 @@
 
     .shoplist{
         background-color: #fff;
+        margin-bottom: 2rem;
         .shop_ul{
             .shop_li{
                 padding: .7rem .4rem;
@@ -106,11 +118,21 @@
                             @include font(0.65rem, 0.65rem, 'PingFangSC-Regular');  //记得添加mixin
                             font-weight: 700;
                             color:#333;
-                        } 
+                        }
+                        .premium:before{
+                            content: '品牌';
+                            display: inline-block;
+                            color: #333;
+                            font-size: 0.6rem;
+                            background-color: #ffd930;
+                            height: .65rem;
+                            margin-right: .2rem;
+                            padding: 0.05rem 0.1rem;
+                        }
                         .support_ul{
                             display: flex;
                             margin-right: -.3rem;
-                            // transform: scale(.8);
+                            transform: scale(.8);
                             .support_li{
                                 font-size: .5rem;
                                 color: #999;
@@ -125,24 +147,28 @@
                         display: flex;
                         justify-content: space-between;
                         align-items: center;
-                        margin-bottom: .52rem;
+                        margin-bottom: .4rem;
+                        height: .6rem;
                         .left{
+                            display: flex;
+                            align-items: center;
                             .score{
                                 font-size: .4rem;
                                 color: #ff6000;
-                                margin: 0 .2rem;
+                                margin: 0 .2rem; 
                             }
                             .sell{
+                                margin-left: -0.25rem; 
                                 font-size: .4rem;
                                 color: #666;
-                                transform: scale(.8);
+                                transform: scale(.83);
                             }
                         }
                         .right{
                             display: flex;
                             align-items: center;
                             margin-right: -.8rem;
-                            // transform: scale(.7);
+                            transform: scale(.7);
                             span{
                                 border: 1px solid $blue;
                                 font-size: .4rem;
@@ -163,14 +189,16 @@
                         display: flex;
                         justify-content: space-between;
                         align-items: center;
+                        margin-left: -0.2rem;                        
                         .left{
-                            font-size: .5rem;
+                            font-size: .6rem;
                             color: #666;
-                            transform: scale(.83);
+                            transform: scale(.9);
                         }
                         .right{
-                            font-size: .5rem;
-                            transform: scale(.83);
+                            font-size: .6rem;
+                            transform: scale(.9);
+                            margin-right: -.25rem;
                             .distance{
                                 color: #999;
                             }
@@ -181,6 +209,14 @@
                     }
                 }
             }
+        }
+
+        .no_more{
+            height: 1.9rem;
+            line-height: 1.9rem;
+            text-align: center;
+            font-size: 0.6rem;
+            color: #666;
         }
     }
 

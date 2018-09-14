@@ -38,7 +38,7 @@
         },
         props: ['login', 'goBack', 'headTitle'],
         created() {
-            this.getUserInfo()
+            this.getUserInfo();
         },
         computed: {
             ...mapState([

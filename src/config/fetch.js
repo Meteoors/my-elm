@@ -22,7 +22,7 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
             method: type,
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "application/json"
+                "Content-Type": "text/html"
             },
             mode: 'cors',   //跨域
             cache: 'reload' //是否使用缓存

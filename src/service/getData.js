@@ -30,7 +30,7 @@ export const msiteAddress = (geohash) => fetch('/v2/pois/' + geohash);
 export const msiteFoodTypes = () => fetch('/v2/index_entry');
 
 //获取商家列表
-export const shopList = (latitude, longtitude) => fetch('/shopping/restaurants', {
-    latitude,
-    longtitude
+export const shopList = (la, long) => fetch('/shopping/restaurants', {
+    latitude: la,
+    longitude: long
 })
