@@ -34,3 +34,9 @@ export const shopList = (la, long) => fetch('/shopping/restaurants', {
     latitude: la,
     longitude: long
 })
+
+//搜索餐馆
+export const searchRestaurant = (geohash, keyword) => fetch('/v4/restaurants', {
+    geohash,
+    keyword
+})

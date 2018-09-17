@@ -16,7 +16,7 @@
                     </div>
                     <div class='middle'>
                         <div class='left'>
-                            <!-- <star :score='shop.rating'></star> -->
+                            <star :score='shop.rating'></star>
                             <span class='score'>{{shop.rating}}</span>
                             <div class='sell'>月售{{shop.recent_order_num}}单</div>
                         </div>
@@ -43,6 +43,7 @@
     import {shopList} from '../../service/getData'
     import {imgBaseUrl} from '../../config/env'
     import {mapState} from 'vuex'
+    import star from './star'
 
     export default {
         data () {
@@ -56,6 +57,9 @@
                             //解决方法是用侦听器watch监视vuex里属性的变化，并重新获取数据
         },
         props: ['geohash'],
+        components: {
+            star
+        },
         computed: {
             ...mapState([
                 'longitude', 'latitude'

@@ -40,6 +40,7 @@
             <shop-list></shop-list>
         </div>
 
+        <foot-guide parent='msite'></foot-guide>
     </div>
 </template>
 
@@ -47,6 +48,7 @@
     import '../../plugins/swiper.min.js'
     import '../../style/swiper.min.css'
     import headTop from '../../components/head/header'
+    import footGuide from '../../components/foot/footer'
     import shopList from '../../components/common/shoplist'
     import {msiteAddress, msiteFoodTypes, cityGuess} from '../../service/getData'
     import {mapMutations, mapState} from 'vuex'
@@ -64,7 +66,7 @@
         async created () {
             if(!this.$route.query.geohash){
                 let address = await cityGuess();
-                this.geohash = address.latitude + ',' + address.longitude;
+                this.geohash = address.latitude + ',' + address.longitude;  //默认地址
             }else{
                 this.geohash = this.$route.query.geohash; //从url取出geohash           
             }
@@ -76,7 +78,7 @@
         },
         mounted () {
             msiteFoodTypes().then(res => {
-                let time = Math.floor(res.length/8);
+                let time = Math.floor(res.length/8);    //将食品类型列表分组（每8个一组）
                 let arr = [];
                 for(var i=0; i<time; i++){
                     arr[i] = res.splice(0, 8);
@@ -99,11 +101,12 @@
         },
         components: {
             headTop,
-            shopList
+            shopList,
+            footGuide
         },
         methods: {
             ...mapMutations([
-                'RECORD_ADDRESS', 'SAVE_GEOHASH'
+                'RECORD_ADDRESS', 'SAVE_GEOHASH'    
             ])
         }
 
