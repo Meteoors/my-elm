@@ -40,3 +40,13 @@ export const searchRestaurant = (geohash, keyword) => fetch('/v4/restaurants', {
     geohash,
     keyword
 })
+
+//获取验证码
+export const getVerify = () => fetch('/v1/captchas', {}, 'POST')
+
+//账号登录
+export const accountLogin = (account, password, verify) => fetch('/v2/login', {
+    username: account,
+    password,
+    captcha_code: verify
+}, 'POST')

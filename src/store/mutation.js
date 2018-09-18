@@ -1,11 +1,12 @@
 import {
     GET_USERINFO,
     SAVE_GEOHASH,
-    RECORD_ADDRESS
+    RECORD_ADDRESS,
+    RECORD_USERINFO
 } from './mutation-types'
 
 export default {
-    //用户信息存入vuex
+    //用户信息存入vuex(header)
     [GET_USERINFO](state, info) {
         if(!info.message){
             state.userInfo = info   //info不存在错误信息，即获取成功
@@ -23,5 +24,10 @@ export default {
     [RECORD_ADDRESS](state, {latitude, longitude}) {
         state.latitude = latitude
         state.longitude = longitude
+    },
+
+    //登录后vuex存入用户信息（login）
+    [RECORD_USERINFO](state, userInfo){
+        state.userInfo = userInfo
     }
 }

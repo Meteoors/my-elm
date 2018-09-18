@@ -18,7 +18,7 @@
                         <div class='detail'>
                             <p class='shop_title'>
                                 <span class='name'>{{shop.name}}</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="24" height="14" class="pay_icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="24" height="13" class="pay_icon">
                                     <polygon points="0,14 4,0 24,0 20,14" style="fill:none;stroke:#FF6000;stroke-width:1" />
                                     <line x1="1.5" y1="12" x2="20" y2="12" style="stroke:#FF6000;stroke-width:1.5"/>
                                     <text x="3.5" y="9" style="fill:#FF6000;font-size:9;font-weight:bold;">支付</text>
@@ -29,13 +29,13 @@
                                 {{shop.float_minimum_order_amount}} 元起送 / 距离{{shop.distance}}
                             </p>
                         </div>
-                        <ul class='activities'>
+                        <ul class='activities' v-if='shop.activities.length'>
                             <li class='activity' v-for='(activity, index) in shop.activities' :key='index'>
                                 <span class='icon' :style="{backgroundColor: '#' + activity.icon_color}">
                                     {{activity.icon_name}}
                                 </span>
                                 <span class='name'>{{activity.name}}</span>
-                                <span class='only_phone'>手机用户专享</span>
+                                <span class='only_phone'>(手机客户端专享)</span>
                             </li>
                         </ul>
                     </div>
@@ -181,9 +181,9 @@
                 background: #f2f2f2;
                 height: 2rem;
                 line-height: 2rem;
-                font-size: .6rem;
+                font-size: .7rem;
                 text-indent: .5rem;
-                font-weight: 700;
+                // font-weight: 700;
                 color: #666;
             }
             .shop_ul{
@@ -198,31 +198,44 @@
                         }
                     }
                     .right{
-                        margin-left: .3rem;
                         color: #666;
                         flex: 1;
                         .detail{
+                            margin-top: -.2rem;
                             padding-bottom: .2rem;
-                            border-bottom: 1px solid $bc;
                             font-size: .6rem; 
+                            transform: scale(.95);
+                            border-bottom: 1px solid $bc;
                             p{
-                                line-height: .9rem;
+                                line-height: .6rem;
+                                padding: .2rem 0;
+                            }
+                            .shop_title{
+                                .pay_icon{
+                                    margin-bottom: -1px;
+                                    // transform: scale(.9);
+                                }
                             }
                         }
                         .activities{
-                            padding-top: .1rem;
+                            padding: .3rem 0 .1rem;  
                             li{
+                                transform: scale(.85);
+                                margin-left: -.7rem;
                                 font-size:0;
                                 span{
                                     font-size: .6rem;
+                                    line-height: .6rem;
                                     display: inline-block;
                                     vertical-align: middle;
                                 }
                                 .icon{
                                     @include sc(.6rem, #fff);
-                                    padding: .04rem;
+                                    padding: 0 2px;
                                     border-radius: .15rem;
                                     margin-right: .125rem;
+                                    height: .8rem;
+                                    line-height: .8rem;
                                 }
                                 .only_phone{
                                     color: #ff6000;

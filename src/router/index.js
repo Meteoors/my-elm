@@ -7,6 +7,8 @@ const home = r => require.ensure([], () => r(require('../page/home/home')), 'hom
 const city = r => require.ensure([], () => r(require('../page/city/city')), 'city')
 const msite = r => require.ensure([], () => r(require('../page/msite/msite')), 'msite')
 const search = r => require.ensure([], () => r(require('../page/search/search')), 'search')
+const login = r => require.ensure([], () => r(require('../page/login/login')), 'login')
+
 
 
 
@@ -35,6 +37,10 @@ export default new Router({
       path: '/search/:geohash',
       component: search,
       meta: {keepAlive: true}
+    },
+    {
+      path: '/login',
+      component: login
     }
   ]
 })
