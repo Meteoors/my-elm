@@ -50,3 +50,12 @@ export const accountLogin = (account, password, verify) => fetch('/v2/login', {
     password,
     captcha_code: verify
 }, 'POST')
+
+//修改密码
+export const changePassword = (username, oldpassWord, newpassword, confirmpassword, captcha_code) => fetch('/v2/changepassword', {
+    username,
+    oldpassWord,
+    newpassword,
+    confirmpassword,
+    captcha_code
+}, 'POST')

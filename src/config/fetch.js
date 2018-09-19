@@ -19,13 +19,15 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 
     if(window.fetch && method === 'fetch'){
         let requestConfig = {
+            credentials: 'include',
             method: type,
             headers: {
                 "Accept": "application/json",
-                "Content-Type": "text/html"
+                "Content-Type": "application/json"
             },
             mode: 'cors',   //跨域
             cache: 'reload' //是否使用缓存
+            
         }
 
         if(type === 'POST'){
@@ -42,7 +44,7 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
             throw new Error(err)
         }
 
-    }else{          //浏览器不支持fetch时使用XHR实现ajax
+    }else{          //浏览器不支持fetch时使用ajax
         return new Promise((resolve, reject) => {
             let xhr
             if(window.XMLHttpRequest){
