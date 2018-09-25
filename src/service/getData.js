@@ -59,3 +59,9 @@ export const changePassword = (username, oldpassWord, newpassword, confirmpasswo
     confirmpassword,
     captcha_code
 }, 'POST')
+
+//获取food页category分类列表
+export const foodCategory = (latitude, longitude) => fetch('/shopping/v2/restaurant/category', {
+    latitude,
+    longitude
+})
