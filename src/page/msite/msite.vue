@@ -17,12 +17,12 @@
             <div class='swiper-container'>
                 <div class='swiper-wrapper'>
                     <div class='swiper-slide' v-for='(foodgroup, index) in foodType' :key='index'>
-                        <router-link to='/food' v-for='food in foodgroup' :key='food.id' class='food'>
+                        <div @click='saveCategory(index, food.title)' v-for='(food, index) in foodgroup' :key='food.id' class='food'>
                             <figure>
                                 <img :src="imgBaseUrl + food.image_url" class='food_img'>
                                 <figcaption class='food_title'>{{food.title}}</figcaption>
                             </figure>
-                        </router-link>
+                        </div>
                     </div>
                 </div>
                 <div class='swiper-pagination'></div>
@@ -52,6 +52,7 @@
     import shopList from '../../components/common/shoplist'
     import {msiteAddress, msiteFoodTypes, cityGuess} from '../../service/getData'
     import {mapMutations, mapState} from 'vuex'
+    import {categoryData} from './category_data' 
 
 
     export default {
@@ -75,6 +76,7 @@
             this.address = res.name; //根据geohash详细定位，取得地址名称
 
             this.RECORD_ADDRESS(res); //latitude,longitude存入vuex
+            console.log(this.latitude+','+this.longitude)
         },
         mounted () {
             msiteFoodTypes().then(res => {
@@ -106,9 +108,14 @@
         },
         methods: {
             ...mapMutations([
-                'RECORD_ADDRESS', 'SAVE_GEOHASH'    
-            ])
-        }
+                'RECORD_ADDRESS', 'SAVE_GEOHASH','RECORD_CATEGORY'
+            ]),
+            saveCategory(index, title) {
+                this.RECORD_CATEGORY(this.categoryData[index]);
+                this.$router.push({path:'/food', query:{title}})
+            }
+        },
+        mixins: [categoryData]
 
     }
 </script>

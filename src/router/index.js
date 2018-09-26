@@ -10,6 +10,8 @@ const search = r => require.ensure([], () => r(require('../page/search/search'))
 const login = r => require.ensure([], () => r(require('../page/login/login')), 'login')
 const forget = r => require.ensure([], () => r(require('../page/forget/forget')), 'forget')
 const profile = r => require.ensure([], () => r(require('../page/profile/profile')), 'profile')
+const food = r => require.ensure([], () => r(require('../page/food/food')), 'food')
+
 
 
 
@@ -51,6 +53,10 @@ export default new Router({
     {
       path: '/profile',
       component: profile
+    },
+    {
+      path: '/food',
+      component: food
     }
   ]
 })

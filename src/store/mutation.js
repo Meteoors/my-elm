@@ -2,7 +2,8 @@ import {
     GET_USERINFO,
     SAVE_GEOHASH,
     RECORD_ADDRESS,
-    RECORD_USERINFO
+    RECORD_USERINFO,
+    RECORD_CATEGORY
 } from './mutation-types'
 
 export default {
@@ -29,5 +30,10 @@ export default {
     //登录后vuex存入用户信息（login）
     [RECORD_USERINFO](state, userInfo){
         state.userInfo = userInfo
+    },
+
+
+    [RECORD_CATEGORY](state, category){
+        state.categoryData = category
     }
 }
