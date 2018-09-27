@@ -29,7 +29,7 @@
         .score_wrapper{
             position: relative;
             overflow: hidden;
-            z-index: 50;
+            z-index: 9;
             height: 100%;
         }
         .star_container{

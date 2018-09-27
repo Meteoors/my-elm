@@ -13,7 +13,7 @@
                     </div>
                 </div>
                 <transition name='showlist'>
-                    <div class='category' v-show='sortBy == "food"'>
+                    <div class='category' v-show='sortBy == "food"' @touchmove='noScroll($event)'>
                         <div class='category_left'>
                             <ul>
                                 <li class='category_left_li' :class='{category_active: restaurant_category_id === item.id}' v-for='(item, index) in category' :key='index' @click.stop='chooseCategory(item.id, index, item.name)'>
@@ -54,7 +54,7 @@
                 <transition name='showlist'>
                     <div class='category sort' v-show='sortBy == "sort"'>
                         <ul>
-                            <li class='sort_li' @click='chooseSortType($event)' data='0'>
+                            <li class='sort_li' @click.stop='chooseSortType($event)' data='0'>
                                 <svg>
 									<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#default"></use>
 								</svg>
@@ -65,7 +65,7 @@
 									</svg>
                                 </p>
                             </li>
-                            <li class='sort_li' @click='chooseSortType($event)' data='5'>
+                            <li class='sort_li' @click.stop='chooseSortType($event)' data='5'>
                                 <svg>
 									<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#distance"></use>
 								</svg>
@@ -76,7 +76,7 @@
 									</svg>
                                 </p>
                             </li>
-                            <li class='sort_li' @click='chooseSortType($event)' data='6'>
+                            <li class='sort_li' @click.stop='chooseSortType($event)' data='6'>
                                 <svg>
 									<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#hot"></use>
 								</svg>
@@ -87,7 +87,7 @@
 									</svg>
                                 </p>
                             </li>
-                            <li class='sort_li' @click='chooseSortType($event)' data='1'>
+                            <li class='sort_li' @click.stop='chooseSortType($event)' data='1'>
                                 <svg>
 									<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#price"></use>
 								</svg>
@@ -98,7 +98,7 @@
 									</svg>
                                 </p>
                             </li>
-                            <li class='sort_li' @click='chooseSortType($event)' data='2'>
+                            <li class='sort_li' @click.stop='chooseSortType($event)' data='2'>
                                 <svg>
 									<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#speed"></use>
 								</svg>
@@ -109,7 +109,7 @@
 									</svg>
                                 </p>
                             </li>
-                            <li class='sort_li' @click='chooseSortType($event)' data='3'>
+                            <li class='sort_li' @click.stop='chooseSortType($event)' data='3'>
                                 <svg>
 									<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#rating"></use>
 								</svg>
@@ -126,26 +126,68 @@
             </div>
 
             <div class='item' @click='chooseType("activity")'>
-                <div class='item_container'>
+                <div class='item_container' :class='{chooseType: this.sortBy == "activity"}'>
                     <span class='item_title'>筛选</span>
                     <svg width="10" height="10" xmlns="http://www.w3.org/2000/svg" version="1.1" class="sort_icon">
 			    	    <polygon points="0,3 10,3 5,8"/>
 		            </svg>
                 </div>
                 <transition name='showlist'>
-                    <div class='activity'>
-                        
+                    <div class='activity category' v-show='this.sortBy == "activity"'>
+                        <p class='title'>配送方式</p>
+                        <ul>
+                            <li class='activity_li' v-for='(item, index) in delivery' :key='index' @click.stop='chooseDelivery(item.id)'>
+                                <svg>
+                                    <use :xlink:href='delivery_mode == item.id ? "#selected":"#fengniao"'></use>
+                                </svg>
+                                <span :class='{active: delivery_mode == item.id}'>{{item.text}}</span>
+                            </li>
+                        </ul>
+                        <p class='title'>商家属性（可以多选）</p>
+                        <ul>
+                            <li class='activity_li' v-for='(item, index) in activity' :key='index' @click.stop='chooseActivity(index, item.id)'>
+                                <span class='icon' :style='{color: "#"+ item.icon_color, borderColor: "#" + item.icon_color}' v-show='!supports_ids[index].status'>
+                                    {{item.icon_name}}
+                                </span>
+                                <svg v-show='supports_ids[index].status' class='activity_svg'>
+                                    <use xlink:href='#selected'></use>
+                                </svg>
+                                <span :class='{active: supports_ids[index].status}'>{{item.name}}</span>
+                            </li>
+                        </ul>
+                        <div class='btns'>
+                            <div class='btn' @click.stop='clearSelect'>清空</div>
+                            <div class='btn ensure' @click.stop='confirmSelect'>
+                                <span>确定</span>
+                                <span v-show='filterNum'>({{filterNum}})</span>
+                            </div>
+                        </div>
                     </div>
                 </transition>
             </div>
         </div>
+
+        <shop-list 
+                :restaurantCategoryId='restaurant_category_id' 
+                :restaurantCategoryIds='restaurant_category_ids' 
+                :sortByType='sortByType'
+                :deliveryMode='delivery_mode'
+                :supportsIds='supports_ids'
+                :confirmStatus='confirmStatus'
+        >
+        </shop-list>
+
+        <transition name='showcover'>
+            <div class='cover' v-if='sortBy'></div>
+        </transition>
     </div>
 </template>
 
 <script>
     import headTop from '../../components/head/header';
+    import shopList from '../../components/common/shoplist';
     import { mapState } from 'vuex';
-    import { foodCategory } from '../../service/getData';
+    import { foodCategory, foodDelivery, foodActivity } from '../../service/getData';
     import {getImgPath} from '../../components/common/mixin';
 
     export default {
@@ -163,10 +205,11 @@
                 sortByType: '',   //排序方式
                 delivery_mode: '', //选中的配送方式
                 supports_ids: '',  //选中的商铺活动列表
-                filterNum: 0  //配送方式和商家活动选中项总数
+                filterNum: 0,  //配送方式和商家活动选中项总数
+                confirmStatus: false
             }
         },
-        mounted () {
+        created () {
             this.init();
         },
         computed: {
@@ -175,14 +218,14 @@
             ])
         },
         components: {
-            headTop
+            headTop, shopList
         },
         mixins: [getImgPath],
         methods: {
             async init() {
                 this.restaurant_category_id = this.categoryData.restaurant_category_id;
                 this.restaurant_category_ids = this.categoryData.restaurant_category_ids;
-                this.sortBytype = this.categoryData.sortBytype;
+                this.sortByType = this.categoryData.sortBytype;
                 this.delivery_mode = this.categoryData.delivery_mode;
                 this.supports_ids = this.categoryData.supports_ids;
 
@@ -206,6 +249,8 @@
                     }
                 })
 
+                this.delivery = await foodDelivery(this.latitude, this.longitude);
+                this.activity = await foodActivity(this.latitude, this.longitude);
             },
             chooseType(type) {
                 if(this.sortBy !== type){
@@ -234,6 +279,35 @@
             chooseSortType(event) {
                 this.sortByType = event.currentTarget.getAttribute('data');
                 this.sortBy = '';
+            },
+            chooseDelivery(id) {
+                if(this.delivery_mode == ''){
+                    this.delivery_mode = id;
+                    this.filterNum++;
+                }else{
+                    this.delivery_mode = '';
+                    this.filterNum--
+                }
+            },
+            chooseActivity(index, id) {
+                if(this.supports_ids[index].status){
+                    this.filterNum--
+                }else{
+                    this.filterNum++
+                }
+
+                this.supports_ids[index].status = !this.supports_ids[index].status;                
+            },
+            clearSelect() {
+                this.filterNum = 0;
+                this.delivery_mode = '';
+                this.supports_ids.forEach(item => {
+                    item.status = false;
+                })
+            },
+            confirmSelect() {
+                this.confirmStatus = !this.confirmStatus;
+                this.sortBy = '';
             }
         }
     }
@@ -254,6 +328,7 @@
             left: 0;
             top: 1.9rem;
             width: 100%;
+            z-index: 16;
             .item{
                 width: 33.3%;
                 flex: 1;
@@ -298,12 +373,12 @@
                     width: 100%;
                     display: flex;
                     border-top: 1px solid $bc;
-                    // transform: translateY(-.6rem);
+                    z-index: 12;
                     .category_left{
                         background: #f1f1f1;
                         flex: 1;
                         height: 16rem;
-                        overflow: hidden;
+                        overflow: auto;
                         li{
                             display: flex;
                             justify-content: space-between;
@@ -341,7 +416,7 @@
                         flex: 1;
                         padding-left: .5rem;
                         height: 16rem;
-                        overflow: hidden;
+                        overflow: auto;
                         background: #fff;
                         li{
                             display: flex;
@@ -389,7 +464,84 @@
                         }
                     }
                 }
+
+                .activity{
+                    background: #fff;
+                    padding-top: .5rem;
+                    display: block; 
+                    p{
+                        padding-left: .5rem;
+                        font-size: .6rem;
+                        line-height: .6rem;
+                    }
+                    ul{
+                        padding: .4rem 0 .5rem .5rem;
+                        display: flex;
+                        flex-wrap: wrap;
+                        li{
+                            display: flex;
+                            align-items: center;
+                            border: .025rem solid #f1f1f1;
+                            border-radius:.125rem;
+                            margin-bottom: .25rem;
+                            margin-right: .25rem;  
+                            padding-left: .25rem; 
+                            width: 4.7rem;
+                            height: 1.4rem;
+                            .icon{
+                                font-size: .6rem;
+                                border: .025rem solid $bc;
+                                border-radius: .15rem;
+                                width: 0.8rem;
+                                text-align: center;
+                                line-height: .8rem;
+                                margin-right: .25rem;
+                            }
+                            span{
+                                font-size: .6rem;
+                            }
+                            .active{
+                                color: $blue;
+                            }
+                            svg{
+                                @include wh(.8rem, .8rem);
+                                margin-right: .25rem;
+                            }
+                        }
+                    }
+                    .btns{
+                        background: #f1f1f1;
+                        padding: .3rem .2rem;
+                        display: flex;
+                        .btn{
+                            flex: 1;
+                            height: 1.8rem;
+                            line-height: 1.8rem;
+                            font-size: .8rem;
+                            border-radius: .2rem;
+                            text-align: center;
+                            background: #fff;
+                        }
+                        .ensure{
+                            background: #56d176;
+                            margin-left: .5rem;
+                            span{
+                                color: #fff;
+                            }
+                        }
+                    }
+                }
             }
+        }
+
+        .cover{
+            position: fixed;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 10;
+            background: rgba(0,0,0,0.3);	
         }
     }
 

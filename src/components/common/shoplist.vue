@@ -56,7 +56,7 @@
             this.init();    //此时父组件msite可能还未将longitude、latitude存入vuex，导致不能正确获得shoplist数据
                             //解决方法是用侦听器watch监视vuex里属性的变化，并重新获取数据
         },
-        props: ['geohash'],
+        props: ['geohash', 'restaurantCategoryId', 'restaurantCategoryIds', 'sortByType', 'deliveryMode', 'supportsIds', 'confirmStatus'],
         components: {
             star
         },
@@ -69,7 +69,7 @@
             async init () {
                 if (!this.latitude||!this.longitude) return;    //先判断经纬度是否为空再请求数据
                 
-                let res = await shopList(this.latitude, this.longitude);
+                let res = await shopList(this.latitude, this.longitude, this.restaurantCategoryId, this.restaurantCategoryIds, this.sortByType, this.deliveryMode, this.supportsIds);
                 this.shoplist = res;
                 console.log(this.shoplist);
             },
@@ -88,6 +88,15 @@
         watch: {
             longitude: function(val){   //longitude变化时重新获取数据
                 this.init();
+            },
+            restaurantCategoryIds: function(val){
+                this.init();
+            },
+            sortByType: function(val){
+                this.init();
+            },
+            confirmStatus: function(val){
+                this.init();
             }
         }
     }
@@ -99,6 +108,8 @@
     .shoplist{
         background-color: #fff;
         margin-bottom: 2rem;
+        position: relative;
+        z-index: 0;
         .shop_ul{
             .shop_li{
                 padding: .7rem .4rem;

@@ -30,10 +30,23 @@ export const msiteAddress = (geohash) => fetch('/v2/pois/' + geohash);
 export const msiteFoodTypes = () => fetch('/v2/index_entry');
 
 //获取商家列表
-export const shopList = (la, long) => fetch('/shopping/restaurants', {
-    latitude: la,
-    longitude: long
-})
+export const shopList = (latitude, longitude, restaurant_category_id='', restaurant_category_ids='', order_by='', delivery_mode='', support_ids=[]) => {
+    let supportStr = '';
+    support_ids.forEach(item => {
+        if(item.status){
+            supportStr += '&support_ids[]=' + item.id;
+        }
+    });
+    let data = {
+        latitude,
+        longitude,
+        restaurant_category_id,
+        'restaurant_category_ids[]': restaurant_category_ids,
+        order_by,
+        'delivery_mode[]': delivery_mode + supportStr
+    };
+    return fetch('/shopping/restaurants', data);
+}
 
 //搜索餐馆
 export const searchRestaurant = (geohash, keyword) => fetch('/v4/restaurants', {
@@ -62,6 +75,18 @@ export const changePassword = (username, oldpassWord, newpassword, confirmpasswo
 
 //获取food页category分类列表
 export const foodCategory = (latitude, longitude) => fetch('/shopping/v2/restaurant/category', {
+    latitude,
+    longitude
+})
+
+//获取food页delivery列表
+export const foodDelivery = (latitude, longitude) => fetch('/shopping/v1/restaurants/delivery_modes', {
+    latitude,
+    longitude
+})
+
+//获取food页activity列表
+export const foodActivity = (latitude, longitude) => fetch('/shopping/v1/restaurants/activity_attributes', {
     latitude,
     longitude
 })
