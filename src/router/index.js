@@ -11,6 +11,8 @@ const login = r => require.ensure([], () => r(require('../page/login/login')), '
 const forget = r => require.ensure([], () => r(require('../page/forget/forget')), 'forget')
 const profile = r => require.ensure([], () => r(require('../page/profile/profile')), 'profile')
 const food = r => require.ensure([], () => r(require('../page/food/food')), 'food')
+const order = r => require.ensure([], () => r(require('../page/order/order')), 'order')
+
 
 
 
@@ -57,6 +59,10 @@ export default new Router({
     {
       path: '/food',
       component: food
+    },
+    {
+      path: '/order',
+      component: order
     }
   ]
 })

@@ -2,7 +2,7 @@
     <div id='food'>
         <head-top go-back='true' :head-title='headTitle'></head-top>
 
-        <div class='options'>
+        <div class='options' @touchmove.prevent>
             <div class='item' @click='chooseType("food")'>
                 <div class='item_container' :class='{chooseType: sortBy == "food"}'>
                     <div class='item_border'>
@@ -13,7 +13,7 @@
                     </div>
                 </div>
                 <transition name='showlist'>
-                    <div class='category' v-show='sortBy == "food"' @touchmove='noScroll($event)'>
+                    <div class='category' v-show='sortBy == "food"'>
                         <div class='category_left'>
                             <ul>
                                 <li class='category_left_li' :class='{category_active: restaurant_category_id === item.id}' v-for='(item, index) in category' :key='index' @click.stop='chooseCategory(item.id, index, item.name)'>
@@ -222,6 +222,9 @@
         },
         mixins: [getImgPath],
         methods: {
+            print() {
+                console.log(1);
+            },
             async init() {
                 this.restaurant_category_id = this.categoryData.restaurant_category_id;
                 this.restaurant_category_ids = this.categoryData.restaurant_category_ids;
@@ -308,6 +311,20 @@
             confirmSelect() {
                 this.confirmStatus = !this.confirmStatus;
                 this.sortBy = '';
+            }
+        },
+        watch: {
+            sortBy: function(newVal, oldVal){
+                if(newVal) {
+                    // let cssStr = 'overflow: hidden; height: 100%;';
+                    // document.getElementsByTagName('html')[0].style.cssText += cssStr
+                    document.getElementsByTagName('html')[0].className = 'noScroll';
+                    document.body.className = 'noScroll';
+                }else{
+                    document.getElementsByTagName('html')[0].className = '';
+                    document.body.className = '';
+                }
+                
             }
         }
     }

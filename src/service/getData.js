@@ -90,3 +90,8 @@ export const foodActivity = (latitude, longitude) => fetch('/shopping/v1/restaur
     latitude,
     longitude
 })
+
+//获取order页订单列表
+export const orderList = user_id => fetch('/bos/v2/users/' + user_id + '/orders', {
+    limit: 10
+})

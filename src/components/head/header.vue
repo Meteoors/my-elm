@@ -1,5 +1,5 @@
 <template>
-    <header id='head'>
+    <header id='head' @touchmove.prevent>
         <slot name='logo'></slot>
 
         <router-link :to="userInfo? '/profile':'/login'" v-if='login' class='login'>
