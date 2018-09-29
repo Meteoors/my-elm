@@ -8,21 +8,27 @@
                 <div class='detail'>
                     <div class='top'>
                         <div class='title'>
-                            <span class='name'>{{order.restaurant_name}}</span>
-                            <span class='pay'>等待支付</span>
+                            <h4 class='name'>
+                                <span class='ellipsis'>{{order.restaurant_name}}</span>
+                                <svg class='arrow_right' fill='#333'>
+                                    <use xlink:href='#arrow-right'></use>
+                                </svg>
+                            </h4>
+                            <span class='pay'>{{paymentStatus[index]}}</span>
                         </div>
-                        <div class='date'>{{order.formatted_created_at}}</div>
+                        <h4 class='date'>{{order.formatted_created_at}}</h4>
                     </div>
                     <div class='middle'>
                         <ul>
                             <li class='food_li'>
-                                <span class='food_name'>{{order.basket.group[0][0].name}}{{order.basket.group[0].length > 1 ? '等' + order.basket.group[0].length + '件商品' : ''}}</span>
-                                <span class='food_price'>{{order.total_amount}}</span>
+                                <span class='food_name ellipsis'>{{order.basket.group[0][0].name}}{{order.basket.group[0].length > 1 ? '等' + order.basket.group[0].length + '件商品' : ''}}</span>
+                                <span class='food_price'>￥{{order.total_amount.toFixed(2)}}</span>
                             </li>
                         </ul>
                     </div>
                     <div class='bottom'>
-                        <span class='one_more'>再来一单</span>
+                        <compute-time :time='order.time_pass' v-if='paymentStatus[index] == "等待支付"' @changePayment='changePayment(index)'></compute-time>
+                        <router-link class='one_more' to='/shop' v-else tag='span'>再来一单</router-link>
                     </div>
                 </div>
             </li>
@@ -35,6 +41,7 @@
 <script>
     import headTop from '../../components/head/header';
     import footGuide from '../../components/foot/footer';
+    import computeTime from '../../components/common/computeTime';
     import { orderList } from '../../service/getData';
     import { mapState } from 'vuex';
     import {imgBaseUrl} from '../../config/env';
@@ -43,35 +50,51 @@
         data() {
             return {
                 orderlist: [],
-                imgBaseUrl
+                imgBaseUrl,
+                paymentStatus: []
             }
         },
         async created() {
             this.orderlist = await orderList(this.userInfo.user_id);
-            console.log(this.orderlist);
+            this.paymentStatus = this.orderlist.map((item) => {
+                return item.status_bar.title;
+            })
+            console.log(this.paymentStatus);
         },
         components: {
             headTop,
-            footGuide
+            footGuide,
+            computeTime
         },
         computed: {
             ...mapState([
                 'userInfo'
             ])
+        },
+        methods: {
+            changePayment(index) {
+                this.paymentStatus[index] = '支付超时';
+            }
         }
     }
 </script>
 
-<style lang='scss'>
+<style lang='scss' socped>
     @import '../../style/mixin';
 
     #order{
+        margin-bottom: 2rem;
         padding-top: 1.9rem;
+        background: #f1f1f1;
+        p, span, h4{
+            font-family: Helvetica Neue,Tahoma,Arial;
+        }
         .order_ul{
-            background: #fff;
             .order_li{
+                background: #fff;
                 display: flex;
                 padding: .6rem .6rem 0;
+                margin-bottom: .5rem;
                 img{
                     width: 2rem;
                     height: 2rem;
@@ -88,6 +111,15 @@
                             .name{
                                 font-size: .75rem;
                                 line-height: 1rem;
+                                display: flex;
+                                align-items: center;
+                                width: 9rem;                                
+                                .arrow_right{
+                                    width: .4rem;
+                                    height: .4rem;
+                                    fill: #ccc;
+                                    margin-left: .1rem;
+                                }
                             }
                             .pay{
                                 font-size: .6rem;
@@ -112,6 +144,7 @@
                                 font-size: .6rem;
                                 line-height: .9rem;
                                 color: #666;
+                                width: 8rem;
                             }
                             .food_price{
                                 font-size: .6rem;
@@ -124,7 +157,7 @@
                     .bottom{
                         display: flex;
                         flex-direction: row-reverse;
-                        padding: .5rem 0 .2rem 0;
+                        padding: .5rem 0 .3rem 0;
                         .one_more{
                             padding: 0 .15rem;
                             color: $blue;

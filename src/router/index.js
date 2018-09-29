@@ -12,10 +12,7 @@ const forget = r => require.ensure([], () => r(require('../page/forget/forget'))
 const profile = r => require.ensure([], () => r(require('../page/profile/profile')), 'profile')
 const food = r => require.ensure([], () => r(require('../page/food/food')), 'food')
 const order = r => require.ensure([], () => r(require('../page/order/order')), 'order')
-
-
-
-
+const shop = r => require.ensure([], () => r(require('../page/shop/shop')), 'shop')
 
 
 
@@ -63,6 +60,10 @@ export default new Router({
     {
       path: '/order',
       component: order
+    },
+    {
+      path: '/shop',
+      component: shop
     }
   ]
 })
