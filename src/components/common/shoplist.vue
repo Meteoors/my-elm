@@ -1,7 +1,7 @@
 <template>
     <div class='shoplist'>
         <ul class='shop_ul'>
-            <router-link to='/shop' v-for='(shop, index) in shoplist' :key='index' tag='li' class='shop_li'>
+            <router-link :to='{path: "/shop", query:{geohash, id: shop.id}}' v-for='(shop, index) in shoplist' :key='index' tag='li' class='shop_li'>
                 <div class='avator'>
                     <img :src="imgBaseUrl + shop.image_path" class='shop_img'>
                 </div>
@@ -71,7 +71,6 @@
                 
                 let res = await shopList(this.latitude, this.longitude, this.restaurantCategoryId, this.restaurantCategoryIds, this.sortByType, this.deliveryMode, this.supportsIds);
                 this.shoplist = res;
-                console.log(this.shoplist);
             },
             intime (supports) {
                 let intime = false;

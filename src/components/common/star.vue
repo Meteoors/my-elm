@@ -23,13 +23,14 @@
 
 <style lang='scss' scoped>
     .star{
+        display: inline-block;
         position: relative;
         width: 2rem;
         height: 0.4rem;
         .score_wrapper{
             position: relative;
             overflow: hidden;
-            z-index: 9;
+            z-index: 20;
             height: 100%;
         }
         .star_container{

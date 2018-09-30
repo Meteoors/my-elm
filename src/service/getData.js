@@ -97,9 +97,9 @@ export const orderList = user_id => fetch('/bos/v2/users/' + user_id + '/orders'
 })
 
 //获取shop页餐馆详情
-export const shopDetail = shop_id => fetch('/shopping/restaurant/' + shop_id)
+export const getShopDetail = shop_id => fetch('/shopping/restaurant/' + shop_id)
 
-//获取shop页食品列表
+//获取good页食品列表
 export const shopMenu = restaurant_id => fetch('/shopping/v2/menu', {
     restaurant_id
 })

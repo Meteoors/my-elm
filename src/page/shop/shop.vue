@@ -1,5 +1,5 @@
 <template>
-    <div id='shop'>
+    <div id='shop' v-if='shopDetail'>
         <div class='back' @click='goBack'>
             <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" version="1.1">
                 <polyline points="12,18 4,9 12,0" style="fill:none;stroke:rgb(255,255,255);stroke-width:3"/>
@@ -8,8 +8,8 @@
 
         <header class='head'>
             <img :src="imgBaseUrl + shopDetail.image_path" class='back_img'>
-            <section class='detail_wrapper' @click='showDetail = true'>
-                <img src="//elm.cangdu.org/img/164ad0b6a3917599.jpg" class='shop_avator'>
+            <section class='detail_wrapper' @click='toShopDetail'>
+                <img :src="imgBaseUrl + shopDetail.image_path" class='shop_avator'>
                 <div class='shop_detail'>
                     <p class='name'>{{shopDetail.name}}</p>
                     <p class='delivery'>商家配送/40分钟送达/配送费￥{{shopDetail.float_delivery_fee}}</p>
@@ -19,7 +19,7 @@
                     <path d="M0 0 L8 7 L0 14"  stroke="#fff" stroke-width="1" fill="none"/>
                 </svg>
             </section>
-            <section class='activity' v-if='shopDetail.activities.length>0' @click='showActivity = true'>
+            <section class='activity' v-if='shopDetail.activities.length' @click='showActivity = true'>
                 <div class='left'>
                     <span class='icon' :style='{backgroundColor: "#" + shopDetail.activities[0].icon_color}'>{{shopDetail.activities[0].icon_name}}</span>
                     <span class='text'>{{shopDetail.activities[0].description}}</span>
@@ -46,7 +46,13 @@
             <section class='activities_detail' v-show='showActivity'>
                 <h2 class='name'>{{shopDetail.name}}</h2>
 
-                <header class='title'>优惠信息</header>
+                <section class='star_wrapper'>
+                    <star :score='shopDetail.rating'></star>
+                </section>
+
+                <header class='title'>
+                    <span>优惠信息</span>
+                </header>
                 <ul class='activities_ul'>
                     <li v-for='(item, index) in shopDetail.activities' :key='index'>
                         <span class='icon' :style='{backgroundColor: "#" + item.icon_color}'>{{item.icon_name}}</span>
@@ -54,7 +60,9 @@
                     </li>
                 </ul>
 
-                <header class='title'>商家公告</header>
+                <header class='title'>
+                    <span>商家公告</span>
+                </header>
                 <div class='bullet-in'>{{shopDetail.promotion_info}}</div>
 
                 <svg width="60" height="60" class="close_activities" @click="showActivity = false">
@@ -69,26 +77,37 @@
 </template>
 
 <script>
-    import { shopDetail } from '../../service/getData';
+    import { getShopDetail } from '../../service/getData';
     import {imgBaseUrl} from '../../config/env';
+    import star from '../../components/common/star'
 
     export default {
         data() {
             return {
                 shopId: '',
-                shopDetail: {},
+                shopDetail: null,
                 imgBaseUrl,
                 showDetail: false,
                 showActivity: false
             }
         },
-        async created() {
+        created() {
             this.shopId = this.$route.query.id;
-            this.shopDetail = await shopDetail(this.shopId);
+            this.init();
+        },
+        components: {
+            star
         },
         methods: {
+            async init() {
+                this.shopId = this.$route.query.id;
+                this.shopDetail = await getShopDetail(this.shopId);
+            },
             goBack() {
                 this.$router.go(-1);
+            },
+            toShopDetail() {
+                this.$router.push({path: '/shopDetail'});
             }
         }
     }
@@ -98,6 +117,13 @@
     @import '../../style/mixin';
 
     #shop{
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
         .back{
             position: fixed;
             top: 0.2rem;
@@ -139,7 +165,7 @@
                     .name{
                         font-size: .8rem;
                         font-weight: 700;
-                        line-height: 1.05rem;
+                        line-height: 1rem;
                         margin-bottom: .4rem;
                     }
                     .delivery{
@@ -166,20 +192,27 @@
                 align-items: center;
                 position: relative;
                 z-index: 10;
-                padding-right: .5rem;
+                padding: 0 .2rem .3rem .9rem;;
+                background: rgba(119,103,137,.43);                                
                 .left{
                     flex: 1;
                     margin-right: 1.2rem;
+                    align-items: center;
+                    display: flex;
                     .icon{
+                        display: inline-block;
+                        line-height: .7rem;
                         font-size: .6rem;
+                        height: .8rem;
                         padding: 0 .1rem;
-                        line-height: .8rem;
                         margin-right: .15rem;
                         color: #fff;
+                        border-radius: .15rem;
                     }
                     .text{
                         font-size: .6rem;
-                        line-height: .8rem;
+                        line-height: .6rem;
+                        height: .7rem;
                         color: #fff;
                     }
                 }
@@ -188,7 +221,7 @@
                     align-items: center;
                     span{
                         display: inline-block;
-                        margin-right: .15rem;
+                        margin-right: .2rem;
                         font-size: .6rem;
                         line-height: .6rem;
                         color: #fff;
@@ -221,6 +254,78 @@
                     color: $blue;
                     border-bottom: 3px solid $blue;
                 }
+            }
+        }
+
+        .fade-enter-active, .fade-leave-active{
+            transition: opacity .5s;
+        }
+        .fade-enter, .fade-leave-to{
+            opacity: 0;
+        }
+        .activities_detail{
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            bottom: 0;
+            background: #262626; 
+            z-index: 15;
+            padding: 1.25rem;
+            font-size: .6rem;
+            .name{
+                font-size: .8rem;
+                line-height: 1.05rem;
+                text-align: center;
+                color: #fff;
+                margin-bottom: .4rem;
+            }
+            .star_wrapper{
+                text-align: center;
+                margin-bottom: 1.2rem;
+            }
+            .title{
+                text-align: center;
+                span{
+                    display: inline-block;
+                    padding: .2rem .4rem;
+                    border: .025rem solid #555;
+                    border-radius: .5rem;
+                    color: #fff;
+                }
+            }
+            .activities_ul{
+                margin: .9rem 0 1.1rem 0;
+                li{
+                    display: flex;
+                    align-items: center;
+                    margin-bottom: .2rem;
+                    .icon{
+                        color: #fff;
+                        height: .75rem;
+                        line-height: .65rem;
+                        padding: 0 .1rem;
+                        display: inline-block;
+                        border-radius: .1rem;
+                        margin-right: .3rem;
+                    }
+                    .text{
+                        color: #fff;
+                        line-height: .6rem;
+                        height: .75rem;
+                    }
+                }
+            }
+            .bullet_in{
+                margin-top: .8rem;
+                color: #fff;
+                line-height: .9rem;
+            }
+            .close_activities{
+                position: absolute;
+                bottom: 1rem;
+                left: 50%;
+                transform: translateX(-50%);
             }
         }
     }
