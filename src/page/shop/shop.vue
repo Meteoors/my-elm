@@ -22,7 +22,7 @@
             <section class='activity' v-if='shopDetail.activities.length' @click='showActivity = true'>
                 <div class='left'>
                     <span class='icon' :style='{backgroundColor: "#" + shopDetail.activities[0].icon_color}'>{{shopDetail.activities[0].icon_name}}</span>
-                    <span class='text'>{{shopDetail.activities[0].description}}</span>
+                    <span class='text'>{{shopDetail.activities[0].description}}（APP专享）</span>
                 </div>
                 <div class='right'>
                     <span>{{shopDetail.activities.length}}个活动</span>
@@ -34,13 +34,15 @@
         </header>
 
         <section class='tabs'>
-            <div class='tab'>
-                <span class='active'>商品</span>
+            <div class='tab' @click='tab = "good"'>
+                <span :class='{active: tab == "good"}'>商品</span>
             </div>
-            <div class='tab'>
-                <span>评价</span>
+            <div class='tab' @click='tab = "rating"'>
+                <span :class='{active: tab == "rating"}'>评价</span>
             </div>
         </section>
+
+        <good :shopId='shopId'></good>
 
         <transition name='fade'>
             <section class='activities_detail' v-show='showActivity'>
@@ -56,7 +58,7 @@
                 <ul class='activities_ul'>
                     <li v-for='(item, index) in shopDetail.activities' :key='index'>
                         <span class='icon' :style='{backgroundColor: "#" + item.icon_color}'>{{item.icon_name}}</span>
-                        <span class='text'>{{item.description}}</span>
+                        <span class='text'>{{item.description}}（APP专享）</span>
                     </li>
                 </ul>
 
@@ -79,7 +81,8 @@
 <script>
     import { getShopDetail } from '../../service/getData';
     import {imgBaseUrl} from '../../config/env';
-    import star from '../../components/common/star'
+    import star from '../../components/common/star';
+    import good from './children/good';
 
     export default {
         data() {
@@ -88,7 +91,8 @@
                 shopDetail: null,
                 imgBaseUrl,
                 showDetail: false,
-                showActivity: false
+                showActivity: false,
+                tab: 'good'
             }
         },
         created() {
@@ -96,7 +100,7 @@
             this.init();
         },
         components: {
-            star
+            star, good
         },
         methods: {
             async init() {
