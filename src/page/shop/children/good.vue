@@ -42,10 +42,13 @@
                                         {{good.activity.image_text}}
                                     </span>
                                 </p>
-                                <p class='price'>
+                                <div class='price'>
                                     <span class='num'>￥{{good.specfoods[0].price}}</span>
                                     <span v-if='good.specifications.length'>起</span>
-                                </p>
+                                    <div class='cart_conrtol_wrapper'>
+                                        <cart-control></cart-control>
+                                    </div>
+                                </div>
                             </div>
                         </li>
                     </ul>
@@ -60,6 +63,7 @@
     import {imgBaseUrl} from '../../../config/env';
     import {getImgPath} from '../../../components/common/mixin';
     import BScroll from 'better-scroll';
+    import cartControl from './children/cartcontrol';
 
     export default {
         data() {
@@ -140,7 +144,7 @@
                     })
                 }
             }
-        }
+        },
         // computed: {
         //     currentIndex() {
         //         const {scrollY, topList} = this;
@@ -149,6 +153,9 @@
         //         })
         //     }
         // }
+        components: {
+            cartControl
+        }
     }
 </script>
 
@@ -316,6 +323,7 @@
                                 .price{
                                     line-height: .7rem;
                                     margin-top: .35rem;
+                                    position: relative;
                                     .num{
                                         color: #f60;
                                         font-weight: 700;
@@ -324,6 +332,10 @@
                                     span{
                                         font-size: .7rem;
                                         line-height: .7rem;
+                                    }
+                                    .cart_conrtol_wrapper{
+                                        @include ct;
+                                        right: 0;
                                     }
                                 }
                             }

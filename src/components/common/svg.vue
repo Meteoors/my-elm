@@ -76,6 +76,18 @@
 			  <g transform="translate(5.038 7.808)"><mask id="c" fill="#fff"><use xlink:href="#b"/></mask><use fill="#FFF" xlink:href="#b"/><path fill="#2073C1" d="M53.962 7.774l-5.701 19.305-40.78 1.574z" opacity=".1" mask="url(#c)"/></g><path stroke="#FFF" stroke-width="6" d="M9.374 18.722S7.868 11.283 7.323 8.71C6.778 6.136 5.86 5.33 3.978 4.52 2.096 3.713.367 2.286.367 2.286" stroke-linecap="round"/><circle cx="46" cy="51" r="4" fill="#FFF"/><circle cx="12" cy="51" r="4" fill="#FFF"/>
 			</g>
 			</symbol>
+			<symbol viewBox="0 0 24 32" id="cart-remove">
+			<path fill="#bbb" fill-rule="evenodd" d="M21.5 10h-19c-1.1 0-1.918.896-1.819 1.992l1.638 18.016C2.419 31.104 3.4 32 4.5 32h15c1.1 0 2.081-.896 2.182-1.992l1.637-18.016A1.798 1.798 0 0 0 21.5 10zM8 28H5L4 14h4v14zm6 0h-4V14h4v14zm5 0h-3V14h4l-1 14zm2-24h-2.941l-.353-2.514C17.592.669 16.823 0 15.998 0H8c-.825 0-1.593.668-1.708 1.486L5.94 4H3a3 3 0 0 0-3 3v1h24V7a3 3 0 0 0-3-3zM8.24 2h7.52l.279 2H7.96l.28-2z"></path>
+			</symbol>
+
+			<symbol viewBox="0 0 50 50" id="cart-add">
+			<path fill="none" d="M0 0h44v44H0z"></path>
+			<path fill-rule="evenodd" d="M22 0C9.8 0 0 9.8 0 22s9.8 22 22 22 22-9.8 22-22S34.2 0 22 0zm10 24h-8v8c0 1.1-.9 2-2 2s-2-.9-2-2v-8h-8c-1.1 0-2-.9-2-2s.9-2 2-2h8v-8c0-1.1.9-2 2-2s2 .9 2 2v8h8c1.1 0 2 .9 2 2s-.9 2-2 2z" clip-rule="evenodd"></path>
+			</symbol>
+			<symbol viewBox="0 0 50 50" id="cart-minus">
+			<path fill-rule="evenodd" stroke-width="4" d="M22 0C9.8 0 0 9.8 0 22s9.8 22 22 22 22-9.8 22-22S34.2 0 22 0zm0 42C11 42 2 33 2 22S11 2 22 2s20 9 20 20-9 20-20 20z" clip-rule="evenodd"></path>
+			<path fill-rule="evenodd" d="M32 20c1.1 0 2 .9 2 2s-.9 2-2 2H12c-1.1 0-2-.9-2-2s.9-2 2-2h20z" clip-rule="evenodd"></path>
+			</symbol>
         </defs>
     </svg>
 </template>

@@ -44,6 +44,8 @@
 
         <good :shopId='shopId'></good>
 
+        <shopcart :shopId='shopId'></shopcart>
+
         <transition name='fade'>
             <section class='activities_detail' v-show='showActivity'>
                 <h2 class='name'>{{shopDetail.name}}</h2>
@@ -83,6 +85,7 @@
     import {imgBaseUrl} from '../../config/env';
     import star from '../../components/common/star';
     import good from './children/good';
+    import shopcart from './children/shopcart'
 
     export default {
         data() {
@@ -100,7 +103,7 @@
             this.init();
         },
         components: {
-            star, good
+            star, good, shopcart
         },
         methods: {
             async init() {
