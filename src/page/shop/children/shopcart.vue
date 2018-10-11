@@ -1,7 +1,7 @@
 <template>
     <div class='shopcart'>
         <transition name='fade'>
-            <section class='cover' v-show='showCart' @click='showCart = false'></section>
+            <section class='cover' v-show='showCart && cartList.length' @click='showCart = false'></section>
         </transition>
 
         <section class='cart_wrapper' @click="toggleCart">
@@ -17,17 +17,17 @@
                     <p class='delivery'>配送费￥{{deliveryFee}}</p>
                 </div>
             </div>
-            <div class='right' :class='{pay_active: minPrice <= 0}'>
-                <span class='not_enough' v-if='minPrice > 0'>还差￥{{minPrice}}起送</span>
+            <div class='right' :class='{pay_active: minPrice-totalPrice <= 0}'>
+                <span class='not_enough' v-if='minPrice-totalPrice > 0'>还差￥{{minPrice-totalPrice}}起送</span>
                 <router-link :to='{path: "confirmOrder", query:{shopId}}' v-else class='pay' tag='span'>去结算</router-link>
             </div>
         </section>
 
         <transition name='cart'>
-            <section class='list_wrapper' v-show='showCart&&totalNum'>
+            <section class='list_wrapper' v-show='showCart&&cartList.length'>
                 <header class='title'>
                     <div class='cart'>购物车</div>
-                    <div class='clear'>
+                    <div class='clear' @click='clearCart'>
                         <svg class='remove'>
                             <use xlink:href='#cart-remove'></use>
                         </svg>
@@ -36,10 +36,13 @@
                 </header>
                 <section id='cartFood' class='cart_food'>
                     <ul>
-                        <li v-for='(item, index) in cartList' :key='index'>
-                            <span class='name ellipsis'>{{item.name}}</span>
-                            <span class='price'>￥{{item.price}}</span>
-                            <cart-control></cart-control>
+                        <li v-for='(food, index) in cartList' :key='index'>
+                            <div class='description'>
+                                <div class='name ellipsis'>{{food.name}}</div>
+                                <div class='specs' v-if='food.specs'>{{food.specs}}</div>
+                            </div>
+                            <span class='price'>￥{{food.price}}</span>
+                            <cart-control parent='shopcart' :item='food'></cart-control>
                         </li>
                     </ul>
                 </section>
@@ -50,50 +53,56 @@
 </template>
 
 <script>
-    import cartControl from './children/cartcontrol'
+    import cartControl from './children/cartcontrol';
+    import { mapState, mapMutations } from 'vuex';
 
     export default {
         data() {
             return {
-                totalNum: 5,
-                totalPrice: 100,
-                deliveryFee: 5,
-                minPrice: 0,
-                cartList: [{
-                    name: '12321',
-                    price: 20,
-                    num: 2
-                },{
-                    name: '12321',
-                    price: 20,
-                    num: 2
-                },{
-                    name: '12321',
-                    price: 20,
-                    num: 2
-                },{
-                    name: '12321',
-                    price: 20,
-                    num: 2
-                },{
-                    name: '12321',
-                    price: 20,
-                    num: 2
-                }
-                ],
-                showCart: false
+                showCart: false,
+                totalNum: 0,
+                totalPrice: 0,
             }
         },
         props: [
-            'shopId'
+            'deliveryFee', 'minPrice' 
         ],
+        created() {
+            this.init();
+        },
+        computed: {
+            ...mapState([
+                'cartList', 'shopId'
+            ])
+        },
         components: {
             cartControl
         },
         methods: {
+            ...mapMutations([
+                'CLEAR_CART'
+            ]),
+            init() {
+                let num = 0;
+                let price = 0
+                this.cartList.forEach(food => {
+                    num += food.num;
+                    price += food.num * (food.price + food.packing_fee); 
+                });
+                this.totalNum = num;
+                this.totalPrice = price
+            },
+            clearCart() {
+                this.CLEAR_CART(this.shopId);
+            },
             toggleCart() {
                 if(this.totalNum == 0) return;
                 this.showCart = !this.showCart;
+            }
+        },
+        watch: {
+            cartList() {
+                this.init();
             }
         }
     }
@@ -157,10 +166,12 @@
                         background: #ff461d;
                         text-align: center;
                         min-width: .7rem;
+                        height: .7rem;
                         line-height: .7rem;
                         border-radius: 50%;
                         color: #fff;
                         font-size: .6rem;
+                        padding: 0 .1rem;
                     }
                 }
                 .icon_wrapper_active{
@@ -244,16 +255,30 @@
                     background: #fff;
                     padding: 0 .6rem;
                     li{
-                        min-height: 2.2rem;                        
+                        min-height: 2.2rem;
+                        padding: .65rem 0;                        
                         display: flex;
                         align-items: center;
                         border-bottom: 1px solid #eceff1;
-                        .name{
+                        .description{
                             flex: 1;
                             padding-right: .1rem;
-                            font-size: .7rem;
-                            font-weight: 700;
-                            color:#666;
+                            display: flex;
+                            flex-direction: column;
+                            .name{
+                                font-size: .7rem;
+                                line-height: .7rem;
+                                font-weight: 700;
+                                color:#666;
+                            }
+                            .specs{
+                                padding-top: .2rem;
+                                font-size: .6rem;
+                                line-height: .6rem;
+                                color: #666;
+                                transform: scale(.9);
+                                transform-origin: 0% 0%;
+                            }
                         }
                         .price{
                             font-size: .7rem;

@@ -42,9 +42,9 @@
             </div>
         </section>
 
-        <good :shopId='shopId'></good>
+        <good></good>
 
-        <shopcart :shopId='shopId'></shopcart>
+        <shopcart :minPrice='shopDetail.float_minimum_order_amount' :deliveryFee='shopDetail.float_delivery_fee'></shopcart>
 
         <transition name='fade'>
             <section class='activities_detail' v-show='showActivity'>
@@ -86,6 +86,7 @@
     import star from '../../components/common/star';
     import good from './children/good';
     import shopcart from './children/shopcart'
+    import {mapMutations} from 'vuex';
 
     export default {
         data() {
@@ -106,8 +107,13 @@
             star, good, shopcart
         },
         methods: {
+            ...mapMutations([
+                'RECORD_SHOPID', 'INIT_BUYCART'
+            ]),
             async init() {
                 this.shopId = this.$route.query.id;
+                this.RECORD_SHOPID(this.shopId);
+                this.INIT_BUYCART();
                 this.shopDetail = await getShopDetail(this.shopId);
             },
             goBack() {
