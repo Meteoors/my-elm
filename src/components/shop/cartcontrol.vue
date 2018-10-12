@@ -8,7 +8,7 @@
         <transition name='fade'>
             <div class='num' v-show='num'>{{num}}</div>
         </transition>
-        <svg @click.stop='addCart'>
+        <svg @click.stop='addCart($event)'>
             <use xlink:href='#cart-add'></use>
         </svg>
     </div>
@@ -29,7 +29,7 @@
         },
         methods: {
             ...mapMutations([
-                'ADD_CART', 'REDUCE_CART'
+                'ADD_CART', 'REDUCE_CART', 'RECORD_SPEC', 'RECORD_SHOWSPEC'
             ]),
             init() {
                 if(this.parent == 'shopcart'){
@@ -44,10 +44,17 @@
                     this.num = itemNum;
                 }
             },
-            addCart() {
+            showSpecsList(food){
+                this.RECORD_SPEC(food);
+                this.RECORD_SHOWSPEC(true);
+            },
+            addCart(event) {
                 if(this.item.specifications.length){    //多规格商品通知good组件显示多规格选择框
-                    this.$emit('showSpecsList', this.item);
+                    this.showSpecsList(this.item);
                 }else{
+                    if(this.parent == 'good'){
+                        this.$emit('drop', event.target);
+                    }
                     let shop_id = this.shopId,
                         category_id = this.item.category_id,
                         item_id = this.item.item_id,
@@ -63,11 +70,6 @@
             reduceCart() {
                 if(this.item.specifications && this.item.specifications.length){    //多规格商品显示只能到购物车删除提示
                     this.$emit('showReduce');
-                    // this.showReduceTip = true;
-                    // clearTimeout(this.timer);
-                    // this.timer = setTimeout(() => {
-                    //     this.showReduceTip = false;
-                    // }, 3000);
                 }else{
                     let shop_id = this.shopId,
                         category_id = this.item.category_id,
@@ -77,7 +79,6 @@
                     this.REDUCE_CART({shop_id, category_id, item_id, food_id});
                 }
             }
-
         },
         computed: {
             ...mapState([
@@ -93,6 +94,8 @@
 </script>
 
 <style lang='scss' scoped>
+    @import '../../style/mixin';
+
     .cart_control{
         display: flex;
         align-items: center;
@@ -124,6 +127,7 @@
         .fade-enter-active{
             transition: all .3s ease-out;
         }
+
     }
 
 </style>

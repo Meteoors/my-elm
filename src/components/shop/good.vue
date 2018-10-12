@@ -46,7 +46,7 @@
                                     <span class='num'>￥{{good.specfoods[0].price}}</span>
                                     <span v-if='good.specifications.length'>起</span>
                                     <div class='cart_conrtol_wrapper'>
-                                        <cart-control :item='good' parent='good' @showSpecsList='showSpecsList' @showReduce='showReduce'></cart-control>
+                                        <cart-control :item='good' parent='good' @drop='drop' @showReduce='showReduce'></cart-control>
                                     </div>
                                 </div>
                             </div>
@@ -56,41 +56,27 @@
             </ul>
         </section>
 
-        <section class='specs_wrapper' v-if='showSpecs'>
-            <transition name='fade'>
-                <div class='cover' v-show='showSpecs' @click='showSpecsList'></div>
-            </transition>
-
-            <div class='specs'>
-                <header class='name'>{{specsFood.name}}</header>
-                <h4 class='title'>{{specsFood.specifications[0].name}}</h4>
-                <ul class='specs_ul'>
-                    <li class='specs_li' :class='{choose: index == specsIndex}' v-for='(item, index) in specsFood.specifications[0].values' :key='index' @click='chooseSpecs(index)'>
-                        {{item}}
-                    </li>
-                </ul>
-                <footer class='foot'>
-                    <span class='price'>￥{{specsFood.specfoods[specsIndex].price}}</span>
-                    <div class='add_cart' @click='addSpecs(specsFood)'>加入购物车</div>
-                </footer>
-                <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" version="1.1" class="close" @click="showSpecsList">
-                    <line x1="0" y1="0" x2="16" y2="16"  stroke="#666" stroke-width="1.2"/>
-                    <line x1="0" y1="16" x2="16" y2="0"  stroke="#666" stroke-width="1.2"/>
-                </svg>
-            </div>
-        </section>
-
         <section class='reduce_tip' v-show='showReduceTip'>多规格商品只能去购物车删除哦</section>
+
+        <transition name='drop' v-for='(ball, index) in balls' :key='index'
+                    @before-enter='beforeDrop'
+                    @enter='dropping'
+                    @after-enter='afterDrop'
+                    :css='false'>
+            <div class='ball' v-show='ball.isShow'>
+                <div class='inner'></div>
+            </div>
+        </transition>
 
     </div>
 </template>
 
 <script>
-    import { shopMenu } from '../../../service/getData';
-    import {imgBaseUrl} from '../../../config/env';
-    import {getImgPath} from '../../../components/common/mixin';
+    import { shopMenu } from '../../service/getData';
+    import {imgBaseUrl} from '../../config/env';
+    import {getImgPath} from '../common/mixin';
     import BScroll from 'better-scroll';
-    import cartControl from './children/cartcontrol';
+    import cartControl from './cartcontrol';
     import {mapState, mapMutations} from 'vuex';
 
     export default {
@@ -103,10 +89,15 @@
                 scrollY: 0,  //滚动高度
                 changeIndex: true,  //控制滚动右侧菜单时是否监听分类index的改变
                 currentIndex: 0,  //右侧菜单当前滚动分类index
-                specsFood: null,  //选中的多规格食物
-                specsIndex: 0,  //多规格食物的规格index
-                showSpecs: false,  //显示多规格选择框,
-                showReduceTip: false    //多规格移除提示
+                showReduceTip: false,    //多规格移除提示
+                balls: [
+                    {isShow: false},
+                    {isShow: false},
+                    {isShow: false},
+                    {isShow: false},
+                    {isShow: false},
+                ],
+                droppingBalls: []
             }
         },
         async created() {
@@ -120,7 +111,7 @@
         mixins: [getImgPath],
         methods: {
             ...mapMutations([
-                'ADD_CART', 'RECORD_CARTLIST'
+                'ADD_CART', 'RECORD_CARTLIST', 'RECORD_SPEC', 'RECORD_SHOWSPEC'
             ]),
             _initScroll() {
                 //better-scroll阻止了默认的事件（preventDefault）
@@ -213,30 +204,6 @@
                 })
                 this.categoryNumList = newArr;
                 this.RECORD_CARTLIST(cartList);
-                console.log(cartList)
-            },
-            showSpecsList(food) {
-                if(food){
-                    this.specsFood = food;
-                }
-                this.showSpecs = !this.showSpecs;
-                this.specsIndex = 0;
-            },
-            chooseSpecs(index) {
-                this.specsIndex = index;
-            },
-            addSpecs(food) {
-                let shop_id = this.shopId,
-                    category_id = food.category_id,
-                    item_id = food.item_id,
-                    food_id = food.specfoods[this.specsIndex].food_id,
-                    name = food.name,
-                    price = food.specfoods[this.specsIndex].price,
-                    specs = food.specifications[0].values[this.specsIndex],
-                    packing_fee = food.specfoods[this.specsIndex].packing_fee;
-
-                this.ADD_CART({shop_id, category_id, item_id, food_id, name, price, specs, packing_fee});
-                this.showSpecsList();
             },
             showReduce() {
                 this.showReduceTip = true;
@@ -245,7 +212,50 @@
                     this.showReduceTip = false;
                 }, 1800);
                 
+            },
+            //启动小球动画
+            drop(el){
+                const ball = this.balls.find(ball => !ball.isShow);
+                if(ball){
+                    ball.isShow = true;
+                    ball.startEl = el;
+                    this.droppingBalls.push(ball);
+                }
+            },
+            //指定小球起始位置
+            beforeDrop(el) {
+                const ball = this.droppingBalls.shift();
+                const {left, top} = ball.startEl.getBoundingClientRect();
+                
+                const elLeft = 26;
+                const elBottom = 22;
+
+                let offsetX = left - elLeft;
+                let offsetY = -(window.innerHeight - top - elBottom);
+
+                el.style.transform = `translate(0, ${offsetY}px)`;
+                el.children[0].style.transform = `translate(${offsetX}px, 0)`
+
+                el.ball = ball;
+            },
+            //指定小球结束位置
+            dropping(el) {
+                //强制重排重绘
+                var temp = el.clientHeight;
+
+                this.$nextTick(() => {
+                    el.style.transform = 'translate(0, 0)';
+                    el.children[0].style.transform = 'translate(0, 0)';
+                })   
+            },
+            //结束后隐藏小球
+            afterDrop(el) {
+                //延迟0.4s到动画结束
+                setTimeout(() => {
+                    el.ball.isShow = false;
+                }, 4000);
             }
+
         },
         // computed: {
         //     currentIndex() {
@@ -265,7 +275,6 @@
         },
         watch: {
             shopcart: function (value){
-                console.log(111);
                 this.initData();
             }
         },
@@ -276,7 +285,7 @@
 </script>
 
 <style lang='scss' scoped>
-    @import '../../../style/mixin';
+    @import '../../style/mixin';
 
     .goods{
         flex: 1;
@@ -464,94 +473,6 @@
             }
         }
 
-        //无效？？？？！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
-        .fade-enter, .fade-leave-to{
-            opacity: 0;
-        }
-        .fade-enter-active, .fade-leave-active{
-            transition: all 1s;
-        }
-        .specs_wrapper{
-            position: fixed;
-            top: 11rem;
-            left: 2.4rem;
-            width: 11.2rem;
-            background: #fff;
-            .cover{
-                position: fixed;
-                left: 0;
-                top: 0;
-                right: 0;
-                bottom: 0;
-                background: rgba(0,0,0,0.4);
-                z-index: 40;
-            }
-
-            .specs{
-                position: relative;
-                z-index: 50;
-                background: #fff;
-                border-radius: .25rem;
-            }
-
-            .name{
-                height: 2rem;
-                line-height: 2rem;
-                text-align: center;
-                font-size: .7rem;
-                color: #222;
-                font-weight: 400;
-                margin-bottom: .5rem;
-            }
-            .title{
-                padding-left: .5rem;
-                font-size: .6rem;
-                color: #666;
-            }
-            .specs_ul{
-                padding: .4rem .5rem;;
-                display: flex;
-                margin-bottom: .5rem;
-                li{
-                    padding: .3rem .5rem;
-                    font-size: .6rem;
-                    border: 1px solid #ddd;
-                    margin: 0 .5rem .2rem 0;
-                    border-radius: .2rem;
-                }
-                .choose{
-                    border-color: $blue;
-                    color: $blue;
-                }
-            }
-            .foot{
-                padding: .5rem;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                .price{
-                    font-size: .8rem;
-                    font-weight: 700;
-                    color: #ff6000;
-                }
-                .add_cart{
-                    color: #fff;
-                    background: $blue;
-                    border-radius: .2rem;
-                    text-align: center;
-                    width: 4rem;
-                    height: 1.3rem;
-                    line-height: 1.3rem;
-                    font-size: .6rem; 
-                }
-            }
-            .close{
-                position: absolute;
-                top: .5rem;
-                right: .5rem;
-            }
-        }
-
         .reduce_tip{
             position: fixed;
             z-index: 40;
@@ -564,6 +485,21 @@
             color: #fff;
             font-size: .65rem;
             border-radius: .25rem;
+        }
+
+        .ball{
+            position: fixed;
+            bottom: 1.1rem;
+            left: 1.3rem;
+            // z-index: 200;
+            transition: all .4s cubic-bezier(0.49, -0.29, 0.75, 0.41);
+            .inner{
+                background: $blue;
+                width: .8rem;
+                height: .8rem;
+                border-radius: 50%;
+                transition: all .4s linear;
+            }
         }
     }
 

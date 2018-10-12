@@ -4,25 +4,6 @@
             <section class='cover' v-show='showCart && cartList.length' @click='showCart = false'></section>
         </transition>
 
-        <section class='cart_wrapper' @click="toggleCart">
-            <div class='left'>
-                <div class='icon_wrapper' :class='{icon_wrapper_active: !!totalNum}'>
-                    <svg class='cart_icon'>
-                        <use xlink:href='#cart-icon'></use>
-                    </svg>
-                    <span class='count' v-if='totalNum'>{{totalNum}}</span>
-                </div>
-                <div class='price'>
-                    <p class='sum'>￥{{totalPrice.toFixed(2)}}</p>
-                    <p class='delivery'>配送费￥{{deliveryFee}}</p>
-                </div>
-            </div>
-            <div class='right' :class='{pay_active: minPrice-totalPrice <= 0}'>
-                <span class='not_enough' v-if='minPrice-totalPrice > 0'>还差￥{{minPrice-totalPrice}}起送</span>
-                <router-link :to='{path: "confirmOrder", query:{shopId}}' v-else class='pay' tag='span'>去结算</router-link>
-            </div>
-        </section>
-
         <transition name='cart'>
             <section class='list_wrapper' v-show='showCart&&cartList.length'>
                 <header class='title'>
@@ -48,12 +29,34 @@
                 </section>
             </section>
         </transition>
+
+
+        <section class='cart_wrapper' @click="toggleCart">
+            <div class='left'>
+                <div class='icon_wrapper' :class='{icon_wrapper_active: !!totalNum}'>
+                    <svg class='cart_icon'>
+                        <use xlink:href='#cart-icon'></use>
+                    </svg>
+                    <span class='count' v-if='totalNum'>{{totalNum}}</span>
+                </div>
+                <div class='price'>
+                    <p class='sum'>￥{{totalPrice.toFixed(2)}}</p>
+                    <p class='delivery'>配送费￥{{deliveryFee}}</p>
+                </div>
+            </div>
+            <div class='right' :class='{pay_active: minPrice-totalPrice <= 0}'>
+                <span class='not_enough' v-if='minPrice-totalPrice > 0'>还差￥{{minPrice-totalPrice}}起送</span>
+                <router-link :to='{path: "confirmOrder", query:{shopId}}' v-else class='pay' tag='span'>去结算</router-link>
+            </div>
+        </section>
+
+        
         
     </div>
 </template>
 
 <script>
-    import cartControl from './children/cartcontrol';
+    import cartControl from './cartcontrol';
     import { mapState, mapMutations } from 'vuex';
 
     export default {
@@ -87,7 +90,7 @@
                 let price = 0
                 this.cartList.forEach(food => {
                     num += food.num;
-                    price += food.num * (food.price + food.packing_fee); 
+                    price += food.num * food.price; 
                 });
                 this.totalNum = num;
                 this.totalPrice = price
@@ -103,13 +106,18 @@
         watch: {
             cartList() {
                 this.init();
+            },
+            totalNum(val) {
+                if(val == 0) {
+                    this.showCart = false;
+                }
             }
         }
     }
 </script>
 
 <style lang='scss' scoped>
-    @import '../../../style/mixin';
+    @import '../../style/mixin';
 
     .shopcart{
         position: fixed;

@@ -42,9 +42,9 @@
             </div>
         </section>
 
-        <good></good>
+        <good v-if='tab == good'></good>
 
-        <shopcart :minPrice='shopDetail.float_minimum_order_amount' :deliveryFee='shopDetail.float_delivery_fee'></shopcart>
+        <shopcart v-if='tab == "good"' :minPrice='shopDetail.float_minimum_order_amount' :deliveryFee='shopDetail.float_delivery_fee'></shopcart>
 
         <transition name='fade'>
             <section class='activities_detail' v-show='showActivity'>
@@ -77,6 +77,30 @@
             </section>
         </transition>
 
+        <transition name='fade'>
+            <section class='specs_wrapper' v-if='specsFood&&showSpecs'>
+                <div class='cover' v-if='showSpecs' @click='closeSpecs'></div>
+
+                <div class='specs' v-show='specsFood'>
+                    <header class='name'>{{specsFood.name}}</header>
+                    <h4 class='title'>{{specsFood.specifications[0].name}}</h4>
+                    <ul class='specs_ul'>
+                        <li class='specs_li' :class='{choose: index == specsIndex}' v-for='(item, index) in specsFood.specifications[0].values' :key='index' @click='chooseSpecs(index)'>
+                            {{item}}
+                        </li>
+                    </ul>
+                    <footer class='foot'>
+                        <span class='price'>￥{{specsFood.specfoods[specsIndex].price}}</span>
+                        <div class='add_cart' @click='addSpecs(specsFood)'>加入购物车</div>
+                    </footer>
+                    <svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" version="1.1" class="close" @click="closeSpecs">
+                        <line x1="0" y1="0" x2="16" y2="16"  stroke="#666" stroke-width="1.2"/>
+                        <line x1="0" y1="16" x2="16" y2="0"  stroke="#666" stroke-width="1.2"/>
+                    </svg>
+                </div>
+            </section>
+        </transition>
+
     </div>
 </template>
 
@@ -84,9 +108,9 @@
     import { getShopDetail } from '../../service/getData';
     import {imgBaseUrl} from '../../config/env';
     import star from '../../components/common/star';
-    import good from './children/good';
-    import shopcart from './children/shopcart'
-    import {mapMutations} from 'vuex';
+    import good from '../../components/shop/good';
+    import shopcart from '../../components/shop/shopcart'
+    import {mapMutations, mapState} from 'vuex';
 
     export default {
         data() {
@@ -96,7 +120,8 @@
                 imgBaseUrl,
                 showDetail: false,
                 showActivity: false,
-                tab: 'good'
+                tab: 'good',
+                specsIndex: 0
             }
         },
         created() {
@@ -106,9 +131,12 @@
         components: {
             star, good, shopcart
         },
+        computed: {
+            ...mapState(['specsFood', 'showSpecs'])
+        },
         methods: {
             ...mapMutations([
-                'RECORD_SHOPID', 'INIT_BUYCART'
+                'RECORD_SHOPID', 'INIT_BUYCART', 'RECORD_SHOWSPEC', 'ADD_CART'
             ]),
             async init() {
                 this.shopId = this.$route.query.id;
@@ -121,6 +149,26 @@
             },
             toShopDetail() {
                 this.$router.push({path: '/shopDetail'});
+            },
+            chooseSpecs(index) {
+                this.specsIndex = index;
+            },
+            closeSpecs() {
+                this.RECORD_SHOWSPEC(false);
+                this.specsIndex = 0;
+            },
+            addSpecs(food) {
+                let shop_id = this.shopId,
+                    category_id = food.category_id,
+                    item_id = food.item_id,
+                    food_id = food.specfoods[this.specsIndex].food_id,
+                    name = food.name,
+                    price = food.specfoods[this.specsIndex].price,
+                    specs = food.specifications[0].values[this.specsIndex],
+                    packing_fee = food.specfoods[this.specsIndex].packing_fee;
+
+                this.ADD_CART({shop_id, category_id, item_id, food_id, name, price, specs, packing_fee});
+                this.closeSpecs();
             }
         }
     }
@@ -271,7 +319,7 @@
         }
 
         .fade-enter-active, .fade-leave-active{
-            transition: opacity .5s;
+            transition: opacity .4s;
         }
         .fade-enter, .fade-leave-to{
             opacity: 0;
@@ -283,7 +331,7 @@
             width: 100%;
             bottom: 0;
             background: #262626; 
-            z-index: 15;
+            z-index: 30;
             padding: 1.25rem;
             font-size: .6rem;
             .name{
@@ -339,6 +387,89 @@
                 bottom: 1rem;
                 left: 50%;
                 transform: translateX(-50%);
+            }
+        }
+
+
+        .specs_wrapper{
+            position: fixed;
+            top: 11rem;
+            left: 2.4rem;
+            width: 11.2rem;
+            background: #fff;
+            z-index: 30;
+            .cover{
+                position: fixed;
+                left: 0;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.4);
+                z-index: 40;
+            }
+
+            .specs{
+                position: relative;
+                z-index: 50;
+                background: #fff;
+                border-radius: .25rem;
+            }
+
+            .name{
+                height: 2rem;
+                line-height: 2rem;
+                text-align: center;
+                font-size: .7rem;
+                color: #222;
+                font-weight: 400;
+                margin-bottom: .5rem;
+            }
+            .title{
+                padding-left: .5rem;
+                font-size: .6rem;
+                color: #666;
+            }
+            .specs_ul{
+                padding: .4rem .5rem;;
+                display: flex;
+                margin-bottom: .5rem;
+                li{
+                    padding: .3rem .5rem;
+                    font-size: .6rem;
+                    border: 1px solid #ddd;
+                    margin: 0 .5rem .2rem 0;
+                    border-radius: .2rem;
+                }
+                .choose{
+                    border-color: $blue;
+                    color: $blue;
+                }
+            }
+            .foot{
+                padding: .5rem;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                .price{
+                    font-size: .8rem;
+                    font-weight: 700;
+                    color: #ff6000;
+                }
+                .add_cart{
+                    color: #fff;
+                    background: $blue;
+                    border-radius: .2rem;
+                    text-align: center;
+                    width: 4rem;
+                    height: 1.3rem;
+                    line-height: 1.3rem;
+                    font-size: .6rem; 
+                }
+            }
+            .close{
+                position: absolute;
+                top: .5rem;
+                right: .5rem;
             }
         }
     }

@@ -14,7 +14,9 @@ const state = {
     categoryData: {},
     shopId: '',  //商家id
     buyCart: {},   //购物车里的食品信息
-    cartList: [] //购物车食品列表
+    cartList: [], //购物车食品列表,
+    specsFood: null,   //多规格食品
+    showSpecs: false    //显示多规格选择框
 }
 
 export default new Vuex.Store({

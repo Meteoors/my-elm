@@ -9,5 +9,6 @@ export const ADD_CART = 'ADD_CART'
 export const REDUCE_CART = 'REDUCE_CART'
 export const RECORD_CARTLIST = 'RECORD_CARTLIST'
 export const CLEAR_CART = 'CLEAR_CART'
-
+export const RECORD_SPEC = 'RECORD_SPEC'
+export const RECORD_SHOWSPEC = 'RECORD_SHOWSPEC'
 

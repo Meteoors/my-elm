@@ -9,7 +9,9 @@ import {
     ADD_CART,
     REDUCE_CART,
     RECORD_CARTLIST,
-    CLEAR_CART
+    CLEAR_CART,
+    RECORD_SPEC,
+    RECORD_SHOWSPEC
 } from './mutation-types'
 
 import {setStore, getStore} from '../config/mUtils'
@@ -87,7 +89,6 @@ export default {
         }
 
         state.buyCart = {...cart};
-        console.log(state.buyCart);
         //存入loccalStorage
         setStore('buyCart', state.buyCart)
     },
@@ -105,7 +106,6 @@ export default {
 
         state.buyCart = {...cart};
         setStore('buyCart', state.buyCart)
-        console.log(state.buyCart);
     },
 
     //good页cartList存入vuex
@@ -117,5 +117,15 @@ export default {
     [CLEAR_CART](state, shopId) {
         state.buyCart[shopId] = null
         setStore('buyCart', state.buyCart)
+    },
+
+    //good页specsFood存入vuex
+    [RECORD_SPEC](state, food) {
+        state.specsFood = food
+    },
+
+    //cartcontrol、shop页showSpecs存入vuex
+    [RECORD_SHOWSPEC](state, isShow) {
+        state.showSpecs = isShow
     }
 }
