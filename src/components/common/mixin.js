@@ -15,3 +15,15 @@ export const getImgPath = {
         }
     }
 }
+
+// export const loadMore = {
+//     directives: {
+//         'load-more': {
+//             bind: (el, loading) => {
+//                 let windowHeight = window.screen.height;
+                
+//                 el.addEventListener('touchstart', )
+//             }
+//         }
+//     }
+// }

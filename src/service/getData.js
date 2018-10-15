@@ -103,3 +103,16 @@ export const getShopDetail = shop_id => fetch('/shopping/restaurant/' + shop_id)
 export const shopMenu = restaurant_id => fetch('/shopping/v2/menu', {
     restaurant_id
 })
+
+//获取rating页评分信息
+export const getScore = shop_id => fetch('/ugc/v2/restaurants/' + shop_id +'/ratings/scores')
+
+//获取rating页tag列表
+export const getTag = shop_id => fetch('/ugc/v2/restaurants/' + shop_id + '/ratings/tags')
+
+//获取rating页评价列表
+export const getRating = (shop_id, tag_name='全部', offset=0, limit=10) => fetch('/ugc/v2/restaurants/' + shop_id +'/ratings', {
+    tag_name,
+    offset,
+    limit
+})

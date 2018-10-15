@@ -1,90 +1,155 @@
 <template>
-    <div class='rating'>
-        <header class='head'>
-            <div class='left'>
-                <div class='score'>{{score.overall_score.toFixed(1)}}</div>
-                <div class='name'>综合评价</div>
-                <div class='rank'>高于周边商家{{toPercent(score.compare_ratings)}}</div>
-            </div>
-            <div class='right'>
-                <div class='item'>
-                    <span class='name'>服务态度</span>
-                    <star :score='score.service_score'></star>
-                    <div class='score'>{{score.service_score.toFixed(1)}}</div>                   
-                </div>
-                <div class='item'>
-                    <span class='name'>菜品评价</span>
-                    <star :score='score.food_score'></star> 
-                    <div class='score'>{{score.food_score.toFixed(1)}}</div>                                                         
-                </div>
-                <div class='item'>
-                    <span class='name'>送达时间</span>
-                    <div class='time'>{{score.deliver_time}}分钟</div>                  
-                </div>  
-            </div>
-        </header>
-
+    <div class='rating' ref='wrapper'>
+        <div class='wrapper'>
         
-
-        <ul class='tag_ul' v-if='tag'>
-            <li class='tag_li' v-for='(item, index) in tag' :key='index' :class='{unsatisfy: item.unsatisfied, active: index == tagIndex}'>
-                {{item.name}}({{item.count}})
-            </li>
-        </ul>
-        
-        <ul class='rating_ul' v-if='rating'>
-            <li class='rating_li' v-for='(item, index) in rating' :key='index'>
-                <img class='avatar' :src="getImgPath(item.avatar)">
+            <header class='head' v-if='score'>
+                <div class='left'>
+                    <div class='score'>{{score.overall_score.toFixed(1)}}</div>
+                    <div class='name'>综合评价</div>
+                    <div class='rank'>高于周边商家{{toPercent(score.compare_rating)}}</div>
+                </div>
                 <div class='right'>
-                    <div class='user'>
-                        <div class='username'>{{item.username}}</div>
-                        <div class='date'>{{item.rated_at}}</div>
+                    <div class='item'>
+                        <span class='name'>服务态度</span>
+                        <star :score='score.service_score'></star>
+                        <div class='score'>{{score.service_score.toFixed(1)}}</div>                   
                     </div>
-                    <div class='score'>
-                        <star :score='item.rating_star'></star>
-                        <span class='time' v-if='item.time_spent_desc'>{{item.time_spent_desc}}</span>
+                    <div class='item'>
+                        <span class='name'>菜品评价</span>
+                        <star :score='score.food_score'></star> 
+                        <div class='score'>{{score.food_score.toFixed(1)}}</div>                                                         
                     </div>
-                    <ul class='img_ul' v-if='item.item_ratings.length'>
-                        <li class='img_li' v-for='(food, index) in item.item_ratings' :key='index' v-if='food.image_hash'>
-                            <img :src="getImgPath(food.image_hash)">
-                        </li>
-                    </ul>
-                    <ul class='name_ul' v-if='item.item_ratings.length'>
-                        <li class='name_li ellipsis' v-for='(food, index) in item.item_ratings' :key='index'>
-                            {{food.food_name}}
-                        </li>
-                    </ul>
+                    <div class='item'>
+                        <span class='name'>送达时间</span>
+                        <div class='time'>{{score.deliver_time}}分钟</div>                  
+                    </div>  
                 </div>
-            </li>
-        </ul>
+            </header>
+
+            <ul class='tag_ul' v-if='tag'>
+                <li class='tag_li' v-for='(item, index) in tag' :key='index' @click='chooseTag(index, item.name)' :class='{unsatisfy: item.unsatisfied, active: index == tagIndex}'>
+                    {{item.name}}({{item.count}})
+                </li>
+            </ul>
+
+            <ul class='rating_ul' v-if='rating'>
+                <li class='rating_li' v-for='(item, index) in rating' :key='index'>
+                    <img class='avatar' :src="getImgPath(item.avatar)">
+                    <div class='right'>
+                        <div class='user'>
+                            <div class='username'>{{item.username}}</div>
+                            <div class='date'>{{item.rated_at}}</div>
+                        </div>
+                        <div class='score'>
+                            <star :score='item.rating_star'></star>
+                            <span class='time' v-if='item.time_spent_desc'>{{item.time_spent_desc}}</span>
+                        </div>
+                        <ul class='img_ul' v-if='item.item_ratings.length'>
+                            <li class='img_li' v-for='(food, index) in item.item_ratings' :key='index' v-if='food.image_hash'>
+                                <img :src="getImgPath(food.image_hash)">
+                            </li>
+                        </ul>
+                        <ul class='name_ul' v-if='item.item_ratings.length'>
+                            <li class='name_li ellipsis' v-for='(food, index) in item.item_ratings' :key='index'>
+                                {{food.food_name}}
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+
+        </div>
+
+        <transition name='load'>
+            <loading v-if='showLoading'></loading>
+        </transition>
     </div>
 </template>
 
 <script>
     import {getImgPath} from '../common/mixin';
     import star from '../common/star';
+    import loading from '../common/loading';
+    import { mapState } from 'vuex';
+    import {getScore, getTag, getRating} from '../../service/getData';
+    import BScroll from 'better-scroll';
 
     export default {
         data() {
             return {
-                tagIndex: 0
+                tagIndex: 0,
+                rating: null,
+                tag: null,
+                score: null,
+                tagName: '',
+                showLoading: false,
+                offset: 0,
+                preventRepeatRequest: false
             }
         },
-        props: [
-            'score', 'rating', 'tag'
-        ],
+        created() {
+            this.initData();
+            this.initScroll();
+        },
         mixins: [getImgPath],
         components: {
-            star
+            star, loading
+        },
+        computed: {
+            ...mapState([
+                'shopId'
+            ])
         },
         methods: {
+            async initData() {
+                this.score = await getScore(this.shopId);
+                this.tag = await getTag(this.shopId);
+                this.rating = await getRating(this.shopId);
+            },
+            async initScroll() {
+                
+                this.$nextTick(() => {
+                    this.scroll = new BScroll(this.$refs.wrapper, {
+                        probeType: 3,
+                        click: true
+                    });
+                    this.scroll.on('scroll', (pos) => {
+                        if(Math.abs(pos.y) >= Math.abs(this.scroll.maxScrollY)){
+                            this.loadMore();
+                            this.scroll.refresh();
+                        }
+                    });                    
+                })
+                
+            },
             toPercent(num) {
                 let percent = (num*100).toFixed(1);
-                percent = percent + '%';
                 return percent;
             },
-            chooseTag(index) {
+            chooseTag(index, name) {
                 this.tagIndex = index;
+                this.tagName = name;
+            },
+            async loadMore() {
+                if(this.preventRepeatRequest) return;
+
+                this.showLoading = true;
+                this.preventRepeatRequest = true;
+                this.offset += 10;
+
+                let res = await getRating(this.shopId, this.tagName, this.offset);
+                this.rating = [...this.rating, ...res];
+                this.showLoading = false;
+
+                if(res.length == 10){
+                    this.preventRepeatRequest = false;
+                }
+            }
+        },
+        watch: {
+            async tagIndex() {
+                this.offset = 0;
+                this.rating = await getRating(this.shopId, this.tagName);
             }
         }
     }
@@ -94,7 +159,9 @@
     @import '../../style/mixin';
 
     .rating{
-        overflow: auto;
+        height: 445px;
+        overflow: hidden;
+
         .head{
             background: #fff;
             display: flex;
@@ -118,7 +185,6 @@
                 }
                 .rank{
                     font-size: .6rem;
-                    transform: scale(.67);
                     color: #999;
                 }
             }
@@ -156,17 +222,17 @@
                 background: #ebf5ff;
                 padding: .3rem;
                 font-size: .6rem;
-                line-height: .6rem;
+                line-height: .8rem;
                 color: #6d7885;
                 margin: 0 .4rem .2rem 0;
                 border-radius: .2rem;
             }
             .unsatisfy{
-                background: #fff;
+                background: #f5f5f5;
                 color: #aaa;
             }
             .active{
-                background: #blue;
+                background: $blue;
                 color: #fff;
             }
         }

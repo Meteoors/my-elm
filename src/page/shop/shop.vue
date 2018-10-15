@@ -42,9 +42,11 @@
             </div>
         </section>
 
-        <good v-if='tab == good'></good>
+        <transition name='tab'>
+            <good v-show='tab == "good"'></good>
+        </transition>
 
-        <shopcart v-if='tab == "good"' :minPrice='shopDetail.float_minimum_order_amount' :deliveryFee='shopDetail.float_delivery_fee'></shopcart>
+        <shopcart v-show='tab == "good"' :minPrice='shopDetail.float_minimum_order_amount' :deliveryFee='shopDetail.float_delivery_fee'></shopcart>
 
         <transition name='fade'>
             <section class='activities_detail' v-show='showActivity'>
@@ -101,6 +103,10 @@
             </section>
         </transition>
 
+        <transition name='tab'>
+            <rating v-show='tab == "rating"'></rating>
+        </transition>
+
     </div>
 </template>
 
@@ -109,7 +115,8 @@
     import {imgBaseUrl} from '../../config/env';
     import star from '../../components/common/star';
     import good from '../../components/shop/good';
-    import shopcart from '../../components/shop/shopcart'
+    import shopcart from '../../components/shop/shopcart';
+    import rating from '../../components/shop/rating';
     import {mapMutations, mapState} from 'vuex';
 
     export default {
@@ -129,7 +136,7 @@
             this.init();
         },
         components: {
-            star, good, shopcart
+            star, good, shopcart, rating
         },
         computed: {
             ...mapState(['specsFood', 'showSpecs'])
@@ -196,6 +203,7 @@
         .head{
             position: relative;
             overflow: hidden;
+            flex: 0 0 auto;
             .back_img{
                 position: absolute;
                 left: 0;
@@ -294,11 +302,20 @@
             }
         }
 
+
+        .tab-enter, .tab-leave-to{
+            opacity: 0;
+        }
+        .tab-enter-active{
+            transition: opacity .5s;
+        }
+
         .tabs{
             display: flex;
             background: #fff;
             border-bottom: 1px solid #f1f1f1;
             height: 1.75rem;
+            flex: 0 0 auto;
             .tab{
                 flex: 1;
                 height: 1.7rem;
