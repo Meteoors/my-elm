@@ -87,6 +87,7 @@
                 preventRepeatRequest: false
             }
         },
+        props: ['tab'],
         created() {
             this.initData();
             this.initScroll();
@@ -104,15 +105,15 @@
             async initData() {
                 this.score = await getScore(this.shopId);
                 this.tag = await getTag(this.shopId);
-                this.rating = await getRating(this.shopId);
             },
             async initScroll() {
-                
+                this.rating = await getRating(this.shopId);
                 this.$nextTick(() => {
                     this.scroll = new BScroll(this.$refs.wrapper, {
                         probeType: 3,
                         click: true
                     });
+                    console.log(this.scroll.maxScrollY);
                     this.scroll.on('scroll', (pos) => {
                         if(Math.abs(pos.y) >= Math.abs(this.scroll.maxScrollY)){
                             this.loadMore();
@@ -150,6 +151,11 @@
             async tagIndex() {
                 this.offset = 0;
                 this.rating = await getRating(this.shopId, this.tagName);
+            },
+            tab(val) {
+                if(val == 'rating'){
+                    this.scroll.refresh();
+                }
             }
         }
     }

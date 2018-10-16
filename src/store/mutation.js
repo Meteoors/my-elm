@@ -5,6 +5,7 @@ import {
     RECORD_USERINFO,
     RECORD_CATEGORY,
     RECORD_SHOPID,
+    RECORD_DETAIL,
     INIT_BUYCART,
     ADD_CART,
     REDUCE_CART,
@@ -50,6 +51,11 @@ export default {
     //shop页shopId存入vuex
     [RECORD_SHOPID](state, id) {
         state.shopId = id
+    },
+
+    //shop页shopDetail存入vuex
+    [RECORD_DETAIL](state, detail) {
+        state.shopDetail = detail
     },
 
     //进入shop页时从localStorage获取buyCart存入vuex

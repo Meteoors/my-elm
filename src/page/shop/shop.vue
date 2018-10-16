@@ -104,9 +104,12 @@
         </transition>
 
         <transition name='tab'>
-            <rating v-show='tab == "rating"'></rating>
+            <rating v-show='tab == "rating"' :tab='tab'></rating>
         </transition>
 
+        <transition name='slide'>
+            <router-view></router-view>
+        </transition>
     </div>
 </template>
 
@@ -143,19 +146,20 @@
         },
         methods: {
             ...mapMutations([
-                'RECORD_SHOPID', 'INIT_BUYCART', 'RECORD_SHOWSPEC', 'ADD_CART'
+                'RECORD_SHOPID', 'INIT_BUYCART', 'RECORD_SHOWSPEC', 'ADD_CART', 'RECORD_DETAIL'
             ]),
             async init() {
                 this.shopId = this.$route.query.id;
                 this.RECORD_SHOPID(this.shopId);
                 this.INIT_BUYCART();
                 this.shopDetail = await getShopDetail(this.shopId);
+                this.RECORD_DETAIL(this.shopDetail);
             },
             goBack() {
                 this.$router.go(-1);
             },
             toShopDetail() {
-                this.$router.push({path: '/shopDetail'});
+                this.$router.push({path: '/shop/shopDetail'});
             },
             chooseSpecs(index) {
                 this.specsIndex = index;
@@ -183,6 +187,14 @@
 
 <style lang='scss' scoped>
     @import '../../style/mixin';
+
+    .slide-enter, .slide-leave-to{
+        opacity: 0;
+        transform: translateX(2rem);
+    }
+    .slide-enter-active, .slide-leave-active{
+        transition: all .4s;
+    }
 
     #shop{
         display: flex;
