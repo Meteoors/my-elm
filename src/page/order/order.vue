@@ -59,7 +59,6 @@
             this.paymentStatus = this.orderlist.map((item) => {
                 return item.status_bar.title;
             })
-            console.log(this.paymentStatus);
         },
         components: {
             headTop,

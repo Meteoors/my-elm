@@ -13,6 +13,7 @@ const profile = r => require.ensure([], () => r(require('../page/profile/profile
 const food = r => require.ensure([], () => r(require('../page/food/food')), 'food')
 const order = r => require.ensure([], () => r(require('../page/order/order')), 'order')
 const shop = r => require.ensure([], () => r(require('../page/shop/shop')), 'shop')
+const foodDetail = r => require.ensure([], () => r(require('../page/shop/children/foodDetail')), 'foodDetail')
 const shopDetail = r => require.ensure([], () => r(require('../page/shop/children/shopDetail')), 'shopDetail')
 
 
@@ -67,6 +68,9 @@ export default new Router({
       path: '/shop',
       component: shop,
       children: [{
+        path: 'foodDetail',
+        component: foodDetail
+      },{
         path: 'shopDetail',   //商家详情页
         component: shopDetail
       }]

@@ -103,7 +103,7 @@
             </section>
         </transition>
 
-        <transition name='tab'>
+        <transition name='fade'>
             <rating v-show='tab == "rating"' :tab='tab'></rating>
         </transition>
 
@@ -314,13 +314,6 @@
             }
         }
 
-
-        .tab-enter, .tab-leave-to{
-            opacity: 0;
-        }
-        .tab-enter-active{
-            transition: opacity .5s;
-        }
 
         .tabs{
             display: flex;

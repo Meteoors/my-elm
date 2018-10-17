@@ -19,7 +19,7 @@
                     </header>
 
                     <ul class='good_ul'>
-                        <li class='good_li' v-for='(good, index) in item.foods' :key='index'>
+                        <router-link class='good_li' :to='{path:"/shop/foodDetail", query:{food: good}}' tag='li' v-for='(good, index) in item.foods' :key='index'>
                             <img :src="imgBaseUrl + good.image_path" class='avatar'>
                             <div class='detail'>
                                 <h4 class='title'>
@@ -50,7 +50,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </li>
+                        </router-link>
                     </ul>
                 </li>
             </ul>
