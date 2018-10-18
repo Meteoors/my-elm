@@ -111,6 +111,10 @@
         </section>        
 
         <foot-guide parent='profile'></foot-guide>
+
+        <transition name='slide'>
+            <router-view></router-view>
+        </transition>
     </div>
 </template>
 
@@ -308,6 +312,14 @@
                     }
                 }
             }
+        }
+
+        .slide-enter, .slide-leave-to{
+            transform: translateX(2rem);
+            opacity: 0;
+        }
+        .slide-enter-active, .slide-leave-to{
+            transition: all .4s;
         }
     }
 </style>
