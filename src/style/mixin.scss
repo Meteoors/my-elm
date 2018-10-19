@@ -9,6 +9,13 @@ $bc: #e4e4e4;
     transform: translateY(-50%);
 }
 
+//左右居中
+@mixin cl {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
 //上下左右居中
 @mixin center {
     position: absolute;

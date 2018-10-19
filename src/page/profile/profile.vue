@@ -2,9 +2,9 @@
     <div id='profile'>
         <head-top go-back='true' head-title='我的'></head-top>
 
-        <router-link class='login_link' :to='userInfo ? "/info":"/login"' tag='div'>
+        <router-link class='login_link' :to='userInfo ? "/profile/info":"/login"' tag='div'>
             <div class='avatar'>
-                <img :src='imgBaseUrl + userInfo.avatar' v-if='userInfo.avatar' class='profile_img'>
+                <img :src='imgBaseUrl + userInfo.avatar' v-if='userInfo' class='profile_img'>
                 <svg class='profile_photo' v-else fill='#fff'>
                     <use xlink:href='#avatar-default'></use>
                 </svg>
@@ -149,12 +149,18 @@
         },
         methods: {
             init () {
-                if(typeof this.userInfo.id === 'number'){
+                if(this.userInfo){
                     this.username = this.userInfo.username;
                     this.mobile = this.userInfo.mobile||'暂无绑定手机号';
                     this.balance = this.userInfo.balance;
                     this.count = this.userInfo.gift_amount;
                     this.point = this.userInfo.point;
+                }else{
+                    this.username = '登录/注册';
+                    this.mobile = '暂无绑定手机号';
+                    this.balance = 0;
+                    this.count = 0;
+                    this.point = 0;
                 }
             }
         },
@@ -190,6 +196,9 @@
                 .profile_img,.profile_photo{
                     width: 100%;
                     height: 100%;
+                }
+                svg{
+                    background: #fff;
                 }
             }
             .userinfo{

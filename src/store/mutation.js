@@ -12,13 +12,15 @@ import {
     RECORD_CARTLIST,
     CLEAR_CART,
     RECORD_SPEC,
-    RECORD_SHOWSPEC
+    RECORD_SHOWSPEC,
+    UPDATE_AVATAR,
+    LOG_OUT
 } from './mutation-types'
 
 import {setStore, getStore} from '../config/mUtils'
 
 export default {
-    //用户信息存入vuex(header)
+    //进入主页时查询localStorage的user_id，通过user_id获取用户信息存入vuex(header)
     [GET_USERINFO](state, info) {
         if(!info.message){
             state.userInfo = info   //info不存在错误信息，即获取成功
@@ -41,6 +43,7 @@ export default {
     //登录后vuex存入用户信息（login）
     [RECORD_USERINFO](state, userInfo) {
         state.userInfo = userInfo
+        setStore('user_id', userInfo.user_id)
     },
 
     //category列表存入vuex
@@ -133,5 +136,15 @@ export default {
     //cartcontrol、shop页showSpecs存入vuex
     [RECORD_SHOWSPEC](state, isShow) {
         state.showSpecs = isShow
+    },
+
+    //info页更新userInfo的头像路径
+    [UPDATE_AVATAR](state, path) {
+        state.userInfo.avatar = path
+    },
+
+    //info页退出登录时清空userInfo
+    [LOG_OUT](state) {
+        state.userInfo = null
     }
 }

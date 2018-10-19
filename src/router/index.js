@@ -15,6 +15,7 @@ const order = r => require.ensure([], () => r(require('../page/order/order')), '
 const shop = r => require.ensure([], () => r(require('../page/shop/shop')), 'shop')
 const foodDetail = r => require.ensure([], () => r(require('../page/shop/children/foodDetail')), 'foodDetail')
 const shopDetail = r => require.ensure([], () => r(require('../page/shop/children/shopDetail')), 'shopDetail')
+const info = r => require.ensure([], () => r(require('../page/profile/children/info')), 'info')
 
 
 
@@ -54,7 +55,11 @@ export default new Router({
     },
     {
       path: '/profile',
-      component: profile
+      component: profile,
+      children: [{
+        path: 'info',
+        component: info
+      }]
     },
     {
       path: '/food',

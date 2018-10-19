@@ -67,7 +67,7 @@
         },
         methods: {
             async init () {
-                if (!this.latitude||!this.longitude) return;    //先判断经纬度是否为空再请求数据
+                // if (!this.latitude||!this.longitude) return;    //先判断经纬度是否为空再请求数据
                 
                 let res = await shopList(this.latitude, this.longitude, this.restaurantCategoryId, this.restaurantCategoryIds, this.sortByType, this.deliveryMode, this.supportsIds);
                 this.shoplist = res;

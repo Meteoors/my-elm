@@ -61,29 +61,34 @@
             <router-view></router-view>
         </transition>
 
-        <transition name='alert'>
-            <section class='exit'>
+        <!-- <transition name='alert'> -->
+            <section class='exit' v-if='showExit'>
                 <div class='cover'></div>
 
-                <div class='circle'>
-                    <span class='line'></span>
-                    <span class='point'></span>
-                </div>
-                <div class='confirm'>是否退出登录</div>
-                <div class='btns'>
-                    <div class='btn' @click='closeExitTip'>再等等</div>
-                    <div class='btn' @click='exit'>退出登录</div>
-                </div>
+                <section class='tip' :class="{enter: isEnter, leave: isLeave}">
+                    <div class='circle'>
+                        <div class='line'></div>
+                        <div class='point'></div>
+                    </div>
+                    <div class='confirm'>是否退出登录</div>
+                    <div class='btns'>
+                        <div class='btn wait' @click='closeExitTip'>再等等</div>
+                        <div class='btn' @click='exit'>退出登录</div>
+                    </div>
+                </section>
             </section>
-        </transition>
+        <!-- </transition> -->
     </div>
 </template>
 
 <script>
     import headTop from '../../../components/head/header';
     import alertTip from '../../../components/common/alert'
-    import { mapState } from 'vuex';
+    import { mapState, mapMutations } from 'vuex';
     import {imgBaseUrl} from '../../../config/env';
+    import {uploadImg, signout} from '../../../service/getData';
+    import { removeStore } from '../../../config/mUtils';
+
 
     export default {
         data () {
@@ -91,7 +96,9 @@
                 imgBaseUrl,
                 showAlert: false,
                 alertText: '',
-                showExit: false
+                showExit: false,
+                isShow: true,
+                isLeave: false
             }
         },
         computed: {
@@ -103,6 +110,36 @@
             headTop, alertTip
         },
         methods: {
+            ...mapMutations([
+                'UPDATE_AVATAR', 'LOG_OUT'
+            ]),
+            async uploadAvatar() {
+                let input = document.querySelector('.upload');
+                let data = new FormData();
+                data.append('file', input.files[0]);
+                try{
+                    // let res = await uploadImg('avatar', data);
+                    // if(res.status == 1){
+                    //     this.userInfo.avatar = res.image_path;
+                    // }
+
+                    let response = await fetch('//elm.cangdu.org/v1/addimg/avatar', {
+                        method: 'POST',
+                        credentials: 'include',
+                        body: data
+                    });
+                    let res = await response.json();
+                    console.log(res);
+                    if(res.status == 1){
+                        this.UPDATE_AVATAR(res.image_path);
+                        console.log('上传头像成功');
+                    }
+                }catch (err) {
+                    this.showAlert = true;
+                    this.alertText = '上传失败';
+                    throw new Error(err);
+                }
+            },
             changePhone() {
                 this.showAlert = true;
                 this.alertText = '请在手机APP中设置';
@@ -112,11 +149,20 @@
             },
             showExitTip() {
                 this.showExit = true;
+                this.isEnter = true;
+                this.isLeave = false;
             },
             closeExitTip() {
-                this.showExit = false;
+                this.isLeave = true;
+                this.isEnter = false;
+                this.timer = setTimeout(() => {
+                    this.showExit = false;                    
+                }, 200);
             },
-            exit() {
+            async exit() {
+                await signout();
+                this.LOG_OUT();
+                removeStore('user_id');
                 this.$router.go(-1);
             }
         }
@@ -127,6 +173,13 @@
     @import '../../../style/mixin';
 
     #info{
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 100;
+        background: #f5f5f5;
         .slide-enter, .slide-leave-to{
             opacity: 0;
             transform: translateX(2rem);
@@ -135,17 +188,8 @@
             transition: all .4s;
         }
 
-        .alert-enter, .alert-leave-to{
-            opacity: 0;
-        }
-
         .wrapper{
-            position: fixed;
-            top: 0;
-            right: 0;
-            left: 0;
-            bottom: 0;
-            margin-top: 4.2rem;
+            margin-top: 2.3rem;
             border-top: 1px solid #ddd;
             .item{
                 background: #fff;
@@ -166,18 +210,27 @@
                     opacity: 0;
                 }
 
+                img{
+                    display: block;
+                    height: 2rem;
+                    margin: .1rem 0;
+                    border-radius: 50%;
+                }
                 .icon_right{
                     @include wh(.66667rem, 1.2rem);
                     fill: #d8d8d8;
                     @include ct;
-                    right: .5rem;
+                    right: .4rem;
                 }
 
                 h4{
                     font-size: .6rem;
                     display: flex;
                     align-items: center;
+                    line-height: 1.2rem;
                     img{
+                        height: 100%;
+                        border-radius: 2px;
                         margin-right: .4rem;
                         display: block;
                     }
@@ -214,11 +267,7 @@
             position: absolute;
             top: 20%;
             left: 3%;
-            width: 96%;
-            padding: 17px;
-            border-radius: 5px;
-            z-index: 100;
-            background: #fff;
+            width: 94%;
 
             .cover{
                 position: fixed;
@@ -228,26 +277,50 @@
                 bottom: 0;
                 background: #000;
                 opacity: .2;
+                z-index: 40;
+            }
+
+            .tip{
+                position: relative;
+                z-index: 41;
+                background: #fff;
+                padding: 17px;
+                border-radius: 5px;
+            }
+
+            .enter{
+                animation: bounceIn .6s;
+                transition: all 1s;
+            }
+
+            .leave{
+                animation: zoomOut .2s;
             }
 
             .circle{
+                position: relative;
                 width: 90px;
                 height: 90px;
                 border: 4px solid #f8bb86;
                 margin: 20px auto;
+                border-radius: 50%;
                 .line{
-                    margin: 10px auto 8px;
+                    position: absolute;
+                    @include cl;
+                    top: 10px;
                     width: 5px;
                     background: #f8bb86;
                     height: 47px;
                     border-radius: 2px;
                 }
                 .point{
-                    width: 6px;
+                    position: absolute;
+                    @include cl;
+                    bottom: 10px;
+                    width: 7px;
                     border-radius: 50%;
                     background: #f8bb86;
-                    margin: 0 auto;
-                    height: 6px;
+                    height: 7px;
                 }
             }
             .confirm{
@@ -260,17 +333,55 @@
                 text-align: center;
                 .btn{
                     display: inline-block;
-                    padding: .4rem .1rem;
+                    padding: .4rem 1rem;
                     border-radius: 5px;
                     font-size: .6rem;
                     color: #fff;
                     letter-spacing: 1px;
-                    background: dd6b55;
+                    background: #dd6b55;
                 }
                 .wait{
                     background: #c1c1c1;
                     margin-right: .4rem;
                 }
+            }
+        }
+
+        @keyframes bounceIn {
+            from, 20%, 40% , 60%, 80%, 100%{
+                animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+            }
+            0% {
+                opacity: 0;
+                transform: scale3d(.3, .3, .3);
+            }
+            20% {
+                transform: scale3d(1.1, 1.1, 1.1);
+            }
+            40% {
+                transform: scale3d(.9, .9, .9);
+            }
+            60% {
+                opacity: 1;
+                transform: scale3d(1.03, 1.03, 1.03);
+            }
+            80% {
+                transform: scale3d(0.97, 0.97, 0.97);
+            }
+            100% {
+                opacity: 1;
+                transform: scale3d(1, 1, 1);
+            }
+        }
+
+        @keyframes zoomOut {
+            0% {
+                opacity: 1; 
+            }
+            100% {
+                opacity: 0;
+                transform: scale3d(.3, .3, .3);
+                -webkit-transform: scale3d(.3, .3, .3);
             }
         }
     }

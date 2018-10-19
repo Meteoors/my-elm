@@ -12,4 +12,7 @@ export const RECORD_CARTLIST = 'RECORD_CARTLIST'
 export const CLEAR_CART = 'CLEAR_CART'
 export const RECORD_SPEC = 'RECORD_SPEC'
 export const RECORD_SHOWSPEC = 'RECORD_SHOWSPEC'
+export const UPDATE_AVATAR = 'UPDATE_AVATAR'
+export const LOG_OUT = 'LOG_OUT'
+
 

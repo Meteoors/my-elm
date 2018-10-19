@@ -116,3 +116,9 @@ export const getRating = (shop_id, tag_name='全部', offset=0, limit=10) => fet
     offset,
     limit
 })
+
+//info页上传头像
+export const uploadImg = (type, data)  => fetch('/v1/addimg/' + type, data, 'POST')
+
+//退出登录
+export const signout = () => fetch('/v2/signout')
