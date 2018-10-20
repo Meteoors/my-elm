@@ -14,13 +14,16 @@ import {
     RECORD_SPEC,
     RECORD_SHOWSPEC,
     UPDATE_AVATAR,
-    LOG_OUT
+    LOG_OUT,
+    SET_USERNAME,
+    SAVE_ADDRESS,
+    DELETE_ADDRESS
 } from './mutation-types'
 
 import {setStore, getStore} from '../config/mUtils'
 
 export default {
-    //进入主页时查询localStorage的user_id，通过user_id获取用户信息存入vuex(header)
+    //head组件查询localStorage的user_id，通过user_id获取用户信息存入vuex(header)
     [GET_USERINFO](state, info) {
         if(!info.message){
             state.userInfo = info   //info不存在错误信息，即获取成功
@@ -146,5 +149,19 @@ export default {
     //info页退出登录时清空userInfo
     [LOG_OUT](state) {
         state.userInfo = null
+    },
+
+    [SET_USERNAME](state, name) {
+        state.userInfo.username = name
+    },
+
+    //address页收货地址列表存入vuex
+    [SAVE_ADDRESS](state, list){
+        state.addressList = list
+    },
+
+    //address页删除收货地址
+    [DELETE_ADDRESS](state, index){
+        state.addressList.splice(index, 1)
     }
 }

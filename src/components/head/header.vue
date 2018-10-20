@@ -24,6 +24,8 @@
         <slot name='search'></slot>
 
         <slot name='msite-title'></slot>
+
+        <slot name='edit'></slot>
     </header>
 </template>
 

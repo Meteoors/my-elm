@@ -1,6 +1,6 @@
 <template>
     <div class='shoplist'>
-        <ul class='shop_ul'>
+        <ul class='shop_ul' v-if='shoplist.length'>
             <router-link :to='{path: "/shop", query:{geohash, id: shop.id}}' v-for='(shop, index) in shoplist' :key='index' tag='li' class='shop_li'>
                 <div class='avator'>
                     <img :src="imgBaseUrl + shop.image_path" class='shop_img'>

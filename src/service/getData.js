@@ -122,3 +122,9 @@ export const uploadImg = (type, data)  => fetch('/v1/addimg/' + type, data, 'POS
 
 //退出登录
 export const signout = () => fetch('/v2/signout')
+
+//address页获取收货地址列表
+export const getAddress = user_id => fetch('/v1/users/' + user_id + '/addresses')
+
+//address页删除收货地址
+export const deleteAddress = (user_id, address_id) => fetch('/v1/users/' + user_id + '/addresses/' + address_id, {}, 'DELETE')
