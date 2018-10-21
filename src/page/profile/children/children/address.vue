@@ -101,7 +101,7 @@
             opacity: 0;
         }
         .slide-enter-active, .slide-leave-active{
-            transform: translateX(0);
+            transition: all .4s;
         }
 
         .edit{

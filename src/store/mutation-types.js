@@ -17,4 +17,5 @@ export const LOG_OUT = 'LOG_OUT'
 export const SET_USERNAME = 'SET_USERNAME'
 export const SAVE_ADDRESS = 'SAVE_ADDRESS'
 export const DELETE_ADDRESS = 'DELETE_ADDRESS'
+export const RECORD_BUILDING = 'RECORD_BUILDING'
 

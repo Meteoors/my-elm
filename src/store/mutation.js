@@ -17,7 +17,8 @@ import {
     LOG_OUT,
     SET_USERNAME,
     SAVE_ADDRESS,
-    DELETE_ADDRESS
+    DELETE_ADDRESS,
+    RECORD_BUILDING
 } from './mutation-types'
 
 import {setStore, getStore} from '../config/mUtils'
@@ -163,5 +164,10 @@ export default {
     //address页删除收货地址
     [DELETE_ADDRESS](state, index){
         state.addressList.splice(index, 1)
+    },
+
+    //addDetail页建筑地址存入vuex
+    [RECORD_BUILDING](state, building){
+        state.building = building
     }
 }

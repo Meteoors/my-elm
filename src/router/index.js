@@ -18,6 +18,7 @@ const shopDetail = r => require.ensure([], () => r(require('../page/shop/childre
 const info = r => require.ensure([], () => r(require('../page/profile/children/info')), 'info')
 const setusername = r => require.ensure([], () => r(require('../page/profile/children/children/setusername')), 'setusername')
 const address = r => require.ensure([], () => r(require('../page/profile/children/children/address')), 'address')
+const add = r => require.ensure([], () => r(require('../page/profile/children/children/children/add')), 'add')
 
 
 
@@ -66,7 +67,11 @@ export default new Router({
           component: setusername
         },{
           path: 'address',
-          component: address
+          component: address,
+          children: [{
+            path: 'add',
+            component: add
+          }]
         }]
       }]
     },

@@ -18,7 +18,8 @@ const state = {
     specsFood: null,   //多规格食品
     showSpecs: false,    //显示多规格选择框,
     shopDetail: null,    //商家详情
-    addressList: []
+    addressList: [],    //收货地址列表
+    building: ''    //add页建筑地址
 }
 
 export default new Vuex.Store({

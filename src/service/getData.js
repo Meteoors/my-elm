@@ -128,3 +128,16 @@ export const getAddress = user_id => fetch('/v1/users/' + user_id + '/addresses'
 
 //address页删除收货地址
 export const deleteAddress = (user_id, address_id) => fetch('/v1/users/' + user_id + '/addresses/' + address_id, {}, 'DELETE')
+
+//add页新增地址
+export const postAddress = (user_id, address, address_detail, geohash, name, phone, phone_bk, tag = '公司', sex = 1, tag_type = 4) => fetch('/v1/users/' + user_id + '/addresses', {
+    address,
+    address_detail,
+    geohash,
+    name,
+    phone,
+    tag,
+    sex,
+    phone_bk,
+    tag_type
+}, 'POST')
