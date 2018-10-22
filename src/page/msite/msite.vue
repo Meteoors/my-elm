@@ -64,7 +64,7 @@
                 imgBaseUrl: 'https://fuss10.elemecdn.com'
             }
         },
-        async created () {
+        async activated () {
             if(!this.$route.query.geohash){
                 let address = await cityGuess();
                 this.geohash = address.latitude + ',' + address.longitude;  //默认地址
@@ -76,7 +76,8 @@
             this.address = res.name; //根据geohash详细定位，取得地址名称
 
             this.RECORD_ADDRESS(res); //latitude,longitude存入vuex
-            console.log(this.latitude+','+this.longitude)
+            // console.log(this.latitude+','+this.longitude);
+            // console.log(this.geohash);
         },
         mounted () {
             msiteFoodTypes().then(res => {

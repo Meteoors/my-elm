@@ -86,6 +86,7 @@
         },
         watch: {
             longitude: function(val){   //longitude变化时重新获取数据
+                console.log(1);
                 this.init();
             },
             restaurantCategoryIds: function(val){

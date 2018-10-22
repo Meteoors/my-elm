@@ -141,3 +141,9 @@ export const postAddress = (user_id, address, address_detail, geohash, name, pho
     phone_bk,
     tag_type
 }, 'POST')
+
+//addDetail页搜索附近地址
+export const searchAddress = keyword => fetch('/v1/pois', {
+    type: 'nearby',
+    keyword
+})

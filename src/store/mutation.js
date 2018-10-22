@@ -36,12 +36,14 @@ export default {
     //geohash存入vuex
     [SAVE_GEOHASH](state, geohash) {
         state.geohash = geohash
+        // console.log('save！')
     },
 
     //经纬度存入vuex
     [RECORD_ADDRESS](state, {latitude, longitude}) {
         state.latitude = latitude
         state.longitude = longitude
+        // console.log('record!')
     },
 
     //登录后vuex存入用户信息（login）
