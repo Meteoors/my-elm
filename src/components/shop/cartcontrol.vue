@@ -23,7 +23,7 @@
                 num: 0
             }
         },
-        props: ['parent', 'item'],
+        props: ['parent', 'item'],  //item为父组件传来的商品对象，可能来自于buyCart或cartList
         created() {
             this.init();
         },
@@ -50,21 +50,22 @@
             },
             addCart(event) {
                 if(this.item.specifications.length){    //多规格商品通知good组件显示多规格选择框
-                    this.showSpecsList(this.item);
+                    this.showSpecsList(this.item);      //父组件为good，且选中食物为多规格
                 }else{
-                    if(this.parent == 'good'){
+                    if(this.parent == 'good'){      //父组件为good，选中食物为单规格
                         this.$emit('drop', event.target);
                     }
-                    let shop_id = this.shopId,
+                    let shop_id = this.shopId,      //父组件为shopcart
                         category_id = this.item.category_id,
                         item_id = this.item.item_id,
                         food_id = this.item.food_id || this.item.specfoods[0].food_id,
                         name = this.item.name,
                         price = this.item.price || this.item.specfoods[0].price,
                         specs = '',
-                        packing_fee = this.item.packing_fee || this.item.specfoods[0].packing_fee;
+                        packing_fee = this.item.packing_fee || this.item.specfoods[0].packing_fee,
+                        stock = this.item.stock || this.item.specfoods[0].stock;
 
-                    this.ADD_CART({shop_id, category_id, item_id, food_id, name, price, specs, packing_fee});
+                    this.ADD_CART({shop_id, category_id, item_id, food_id, name, price, specs, packing_fee, stock});
                 }
             },
             reduceCart() {

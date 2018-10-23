@@ -18,7 +18,8 @@ import {
     SET_USERNAME,
     SAVE_ADDRESS,
     DELETE_ADDRESS,
-    RECORD_BUILDING
+    RECORD_BUILDING,
+    CHOOSE_ADDRESS
 } from './mutation-types'
 
 import {setStore, getStore} from '../config/mUtils'
@@ -84,7 +85,8 @@ export default {
         name,
         price,
         specs,
-        packing_fee
+        packing_fee,
+        stock
     }) {
         let cart = state.buyCart
         let shop = cart[shop_id] = cart[shop_id] || {}
@@ -99,7 +101,8 @@ export default {
                 "name": name,
                 "price": price,
                 "specs": specs,
-                "packing_fee": packing_fee
+                "packing_fee": packing_fee,
+                "stock": stock
             }
         }
 
@@ -171,5 +174,10 @@ export default {
     //addDetail页建筑地址存入vuex
     [RECORD_BUILDING](state, building){
         state.building = building
+    },
+
+    //confirmOrder页chosenAddress存入vuex
+    [CHOOSE_ADDRESS](state, adderss){
+        state.chosenAddress = address;
     }
 }

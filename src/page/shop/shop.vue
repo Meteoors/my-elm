@@ -176,9 +176,10 @@
                     name = food.name,
                     price = food.specfoods[this.specsIndex].price,
                     specs = food.specifications[0].values[this.specsIndex],
-                    packing_fee = food.specfoods[this.specsIndex].packing_fee;
+                    packing_fee = food.specfoods[this.specsIndex].packing_fee,
+                    stock = food.specfoods[this.specsIndex].stock;
 
-                this.ADD_CART({shop_id, category_id, item_id, food_id, name, price, specs, packing_fee});
+                this.ADD_CART({shop_id, category_id, item_id, food_id, name, price, specs, packing_fee, stock});
                 this.closeSpecs();
             }
         }

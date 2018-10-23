@@ -147,3 +147,19 @@ export const searchAddress = keyword => fetch('/v1/pois', {
     type: 'nearby',
     keyword
 })
+
+//confirmOrder页checkout
+export const checkoutData = (geohash, entities, restaurant_id) => fetch('/v1/carts/checkout', {
+    geohash,
+    entities,
+    restaurant_id
+})
+
+//confirmOrder页提交订单
+export const confirmOrder = (user_id, cart_id, addess_id, restaurant_id, geohash, description, entities) => fetch('/v1/users/' + user_id + '/carts/' + cart_id + '/orders', {
+    addess_id,
+    restaurant_id,
+    geohash,
+    description,
+    entities
+})

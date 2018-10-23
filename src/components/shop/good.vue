@@ -111,7 +111,7 @@
         mixins: [getImgPath],
         methods: {
             ...mapMutations([
-                'ADD_CART', 'RECORD_CARTLIST', 'RECORD_SPEC', 'RECORD_SHOWSPEC'
+                'RECORD_CARTLIST'
             ]),
             _initScroll() {
                 //better-scroll阻止了默认的事件（preventDefault）
@@ -193,6 +193,8 @@
                                     cartList[cartListNum].price = food.price;
                                     cartList[cartListNum].specs = food.specs;
                                     cartList[cartListNum].packing_fee = food.packing_fee;
+                                    cartList[cartListNum].stock = food.stock;
+                                    
                                     cartListNum ++;
                                 }
                             })

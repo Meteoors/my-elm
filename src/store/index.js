@@ -19,7 +19,8 @@ const state = {
     showSpecs: false,    //显示多规格选择框,
     shopDetail: null,    //商家详情
     addressList: [],    //收货地址列表
-    building: ''    //add页建筑地址
+    building: '',    //add页建筑地址
+    chosenAddess: null //confirmOrder页默认地址
 }
 
 export default new Vuex.Store({
