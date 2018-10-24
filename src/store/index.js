@@ -20,7 +20,9 @@ const state = {
     shopDetail: null,    //商家详情
     addressList: [],    //收货地址列表
     building: '',    //add页建筑地址
-    chosenAddess: null //confirmOrder页默认地址
+    chosenAddess: null, //confirmOrder页默认地址
+    orderParam: null,  //订单参数
+    orderMessage: null  //下单成功返回信息
 }
 
 export default new Vuex.Store({

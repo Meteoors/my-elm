@@ -19,7 +19,9 @@ import {
     SAVE_ADDRESS,
     DELETE_ADDRESS,
     RECORD_BUILDING,
-    CHOOSE_ADDRESS
+    CHOOSE_ADDRESS,
+    SAVE_ORDER,
+    ORDER_SUCCESS
 } from './mutation-types'
 
 import {setStore, getStore} from '../config/mUtils'
@@ -179,5 +181,15 @@ export default {
     //confirmOrder页chosenAddress存入vuex
     [CHOOSE_ADDRESS](state, adderss){
         state.chosenAddress = address;
+    },
+
+    //订单信息存入vuex
+    [SAVE_ORDER](state, order){
+        state.orderParam = order
+    },
+
+    //订单状态存入vuex
+    [ORDER_SUCCESS](state, message){
+        state.orderMessage = message
     }
 }
