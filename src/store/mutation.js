@@ -179,7 +179,7 @@ export default {
     },
 
     //confirmOrder页chosenAddress存入vuex
-    [CHOOSE_ADDRESS](state, adderss){
+    [CHOOSE_ADDRESS](state, address){
         state.chosenAddress = address;
     },
 

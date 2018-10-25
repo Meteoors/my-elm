@@ -20,6 +20,8 @@ const setusername = r => require.ensure([], () => r(require('../page/profile/chi
 const address = r => require.ensure([], () => r(require('../page/profile/children/children/address')), 'address')
 const add = r => require.ensure([], () => r(require('../page/profile/children/children/children/add')), 'add')
 const addDetail = r => require.ensure([], () => r(require('../page/profile/children/children/children/children/addDetail')), 'addDetail')
+const confirmOrder = r => require.ensure([], () => r(require('../page/confirmOrder/confirmOrder')), 'confirmOrder')
+const chooseAddress = r => require.ensure([], () => r(require('../page/confirmOrder/children/chooseAddress')), 'chooseAddress')
 
 
 
@@ -97,6 +99,14 @@ export default new Router({
       },{
         path: 'shopDetail',   //商家详情页
         component: shopDetail
+      }]
+    },
+    {
+      path: '/confirmOrder',
+      component: confirmOrder,
+      children: [{
+        path: 'chooseAddress',
+        component: chooseAddress
       }]
     }
   ]

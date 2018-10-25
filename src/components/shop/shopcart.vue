@@ -46,7 +46,7 @@
             </div>
             <div class='right' :class='{pay_active: minPrice-totalPrice <= 0}'>
                 <span class='not_enough' v-if='minPrice-totalPrice > 0'>还差￥{{minPrice-totalPrice}}起送</span>
-                <router-link :to='{path: "confirmOrder", query:{shopId}}' v-else class='pay' tag='span'>去结算</router-link>
+                <router-link :to='{path: "confirmOrder", query:{shopId, geohash}}' v-else class='pay' tag='span'>去结算</router-link>
             </div>
         </section>
 
@@ -75,7 +75,7 @@
         },
         computed: {
             ...mapState([
-                'cartList', 'shopId'
+                'cartList', 'shopId', 'geohash'
             ])
         },
         components: {

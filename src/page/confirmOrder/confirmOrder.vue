@@ -109,7 +109,6 @@
 
             <transition name='slide_up'>
                 <section class='pay_way' v-show='showPayWay'>
-                <div class='cover' @click='showPayWay = false'></div>
                 <header>支付方式</header>
                 <ul class='pay_ul'>
                     <li :class='{chosen: payWayId == item.id}' @click='choosePayWay(item.is_online_payment, item.id)' v-for='(item, index) in checkoutData.payments' :key='index'>
@@ -120,6 +119,10 @@
                     </li>
                 </ul>
                 </section>
+            </transition>
+
+            <transition name='fade'>
+                <div class='cover' @click='showPayWay = false' v-show='showPayWay'></div>                
             </transition>
 
         </section>
@@ -148,7 +151,6 @@
                 geohash: '',
                 shopId: null,
                 imgBaseUrl,
-                chosenAddress: null,
                 checkoutData: null,
                 remark: '',
                 showPayWay: false,
@@ -167,7 +169,6 @@
             this.shopCart = this.buyCart[this.shopId];  //取得当前购物车信息
 
             this.initData();
-            this.showLoading = false;
         },
         components: {
             headTop, alertTip, loading
@@ -179,7 +180,7 @@
         },
         methods: {
             ...mapMutations([
-                'INIT_BUYCART', 'CHOOSE_ADDRESS', 'SAVE_ORDER', 'ORDER_SUCCESS'
+                'INIT_BUYCART', 'CHOOSE_ADDRESS', 'SAVE_ORDER', 'ORDER_SUCCESS', 'SAVE_ADDRESS'
             ]),
             async initData() {
                 //checkout，需要newArr作为参数，遍历shopCart取出newArr
@@ -203,15 +204,17 @@
                     })
                 })
 
-                this.checkoutData = await checkoutData(this.geohash, newArr, this.shopId);
+                this.checkoutData = await checkoutData(this.geohash, [newArr], this.shopId);
                 this.initAddress();
+                this.showLoading = false;                
             },
             async initAddress() {
                 if(this.userInfo && this.userInfo.user_id){ //确保userInfo初始化成功后再请求数据（watch）
                     let res = await getAddress(this.userInfo.user_id);
                     if(res instanceof Array && res.length){
-                        this.CHOOSE_ADDESS({address: res[0], index: 0});
+                        this.CHOOSE_ADDRESS(res[0]);
                     }
+                    this.SAVE_ADDRESS(res);
                 }
             },
             //转换地址标签颜色
@@ -273,7 +276,7 @@
 <style lang='scss' scoped>
     @import '../../style/mixin';
 
-    #order_confirm{
+    #confirm_order{
         position: fixed;
         left: 0;
         top: 0;
@@ -282,29 +285,38 @@
         z-index: 40;
         background: #f5f5f5;
         padding-top : 1.8rem;
-        padding-bottom: .3rem;
+        padding-bottom: 3rem;
         overflow: auto;
         
         .slide-enter, .slide_leave-to{
-            opacity: 0;
             transform: translateX(2rem);
         }
         .slide-enter-active, .slide-leave-active{
             transition: all .4s;
         }
 
-        .slide_up-enter, .slide_upleave-to{
+        .slide_up-enter, .slide_up-leave-to{
             opacity: 0;
             transform: translateY(8rem);
+        }
+        .slide_up-enter-active, .slide_up-leave-active{
+            transition: all .4s;
+        }
+
+        .fade-enter, .fade-leave-to{
+            opacity: 0;
+        }
+        .fade-enter-active, .fade-leave-active{
+            transition: opacity .4s;
         }
 
         .address_wrapper{
             display: flex;
-            background-color: #fff;
             justify-content: space-between;
             align-items: center;
             padding: 0 .6rem;
             background: url(../../images/address_bottom.png) left bottom repeat-x;
+            background-color: #fff;
             min-height: 3.5rem;
             background-size: auto .12rem;
             .left{
@@ -315,10 +327,11 @@
                     fill: $blue;
                     height: .8rem;
                     width: .8rem;
-                    margin-right: .4rem;
+                    margin-right: .2rem;
                 }
                 .no_address{
-
+                    font-size: .7rem;
+                    line-height: .7rem;
                 }
                 .address{
                     header{
@@ -380,8 +393,8 @@
                     margin-top: .5rem;
                     color: #fff;
                     font-size: .6rem;
-                    border-radius: .12rem;
-                    padding: .1rem .2rem;
+                    border-radius: .25rem;
+                    padding: .1rem .25rem;
                 }
             }
         }
@@ -395,7 +408,7 @@
                 align-items: center;
                 justify-content: space-between;
                 border-bottom: 1px solid #f5f5f5;
-                line-height: .2rem;
+                line-height: 2rem;
                 .title{
                     font-size: .7rem;
                     color: #666;
@@ -416,7 +429,7 @@
                 }
             }
             .hongbao{
-                line-height: .2rem;
+                line-height: 2rem;
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
@@ -437,10 +450,11 @@
                 align-items: center;
                 img{
                     @include wh(1.2rem, 1.2rem);
-                    margin-right: .2rem;
+                    margin-right: .3rem;
                 }
                 span{
                     font-size: .8rem;
+                    line-height: .8rem;
                 }
             }
 
@@ -461,6 +475,7 @@
                         display: flex;
                         align-items: center;
                         justify-content: space-between;
+                        flex: 1;
                         .num{
                             font-size: .65rem;
                             color: #f60;
@@ -492,7 +507,7 @@
                 border-top: 1px solid #f5f5f5;
                 display: flex;
                 padding: 0 .7rem;
-                line-height: 1.8rem;
+                line-height: 2rem;
                 justify-content: space-between;
                 align-items: center;
                 span{
@@ -502,7 +517,7 @@
                 }
                 span:last-child{
                     color: #f60;
-                    flex: 0;
+                    text-align: right;
                 }
             }
             
@@ -527,7 +542,7 @@
                     span{
                         font-size: .6rem;
                         color: #aaa;
-                        margin-right: .2rem;
+                        margin-right: .3rem;
                     }
                     svg{
                         fill: #ccc;
@@ -571,15 +586,7 @@
             width: 100%;
             background: #fff;
             min-height: 8rem;
-            .cover{
-                display: fixed;
-                background: rgba(0,0,0,.3);
-                left: 0;
-                right: 0;
-                top: 0;
-                bottom: 0;
-                z-index: 100;
-            }
+            z-index: 101;
             header{
                 line-height: 2rem;
                 text-align: center;
@@ -611,6 +618,16 @@
                     }
                 }
             }
+        }
+
+        .cover{
+            position: fixed;
+            background: rgba(0,0,0,.3);
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 100;
         }
 
 

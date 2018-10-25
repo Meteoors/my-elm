@@ -152,8 +152,9 @@ export const searchAddress = keyword => fetch('/v1/pois', {
 export const checkoutData = (geohash, entities, restaurant_id) => fetch('/v1/carts/checkout', {
     geohash,
     entities,
-    restaurant_id
-})
+    restaurant_id,
+    come_from: 'web'
+}, 'POST')
 
 //confirmOrder页提交订单
 export const confirmOrder = (user_id, cart_id, addess_id, restaurant_id, geohash, description, entities) => fetch('/v1/users/' + user_id + '/carts/' + cart_id + '/orders', {
@@ -162,4 +163,4 @@ export const confirmOrder = (user_id, cart_id, addess_id, restaurant_id, geohash
     geohash,
     description,
     entities
-})
+}, 'POST')

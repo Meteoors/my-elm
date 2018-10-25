@@ -69,7 +69,7 @@
                 <header class='title'>
                     <span>商家公告</span>
                 </header>
-                <div class='bullet-in'>{{shopDetail.promotion_info}}</div>
+                <div class='bullet_in'>{{shopDetail.promotion_info}}</div>
 
                 <svg width="60" height="60" class="close_activities" @click="showActivity = false">
                     <circle cx="30" cy="30" r="25" stroke="#555" stroke-width="1" fill="none"/>
