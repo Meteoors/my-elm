@@ -157,10 +157,13 @@ export const checkoutData = (geohash, entities, restaurant_id) => fetch('/v1/car
 }, 'POST')
 
 //confirmOrder页提交订单
-export const confirmOrder = (user_id, cart_id, addess_id, restaurant_id, geohash, description, entities) => fetch('/v1/users/' + user_id + '/carts/' + cart_id + '/orders', {
-    addess_id,
+export const confirmOrder = (user_id, cart_id, address_id, restaurant_id, geohash, description, entities) => fetch('/v1/users/' + user_id + '/carts/' + cart_id + '/orders', {
+    address_id,
     restaurant_id,
     geohash,
     description,
     entities
 }, 'POST')
+
+//remark页获取备注信息
+export const getRemark = cart_id => fetch('/v1/carts/' + cart_id +'/remarks');

@@ -81,10 +81,10 @@
             </section>
 
             <section class='extra'>
-                <router-link to='/confirmOrder/remark' class='item'>
+                <router-link :to='{path: "/confirmOrder/remark", query: {cart_id: checkoutData.id}}' class='item'>
                     <span class='title'>订单备注</span>
                     <div class='detail'>
-                        <span class='ellipsis'>{{remark ? remark : '口味、偏好等'}}</span>
+                        <span class='ellipsis'>{{remark ? remarkText : '口味、偏好等'}}</span>
                         <svg class='arrow_right'>
                             <use xlink:href='#arrow-right'></use>
                         </svg>
@@ -158,25 +158,44 @@
                 shopCart: null,
                 showAlert: false,
                 alertText: '',
-                showLoading: true
+                showLoading: true,
             }
         },
-        created() {
+        async created() {
             this.geohash = this.$route.query.geohash;
             this.shopId = this.$route.query.shopId;
 
             this.INIT_BUYCART();    //从localStorage取出buyCart
             this.shopCart = this.buyCart[this.shopId];  //取得当前购物车信息
-
-            this.initData();
+            
+            await this.initData();
         },
         components: {
             headTop, alertTip, loading
         },
         computed: {
             ...mapState([
-                'buyCart', 'userInfo', 'chosenAddress'
-            ])
+                'buyCart', 'userInfo', 'chosenAddress', 'remark'
+            ]),
+            remarkText() {
+                let remark = this.remark.remarkText;
+                let input = this.remark.inputText;
+                let str = '';
+                
+                Object.values(remark).forEach(type => {
+                    Object.values(type).forEach(tag => {
+                        str += `${tag}、`;
+                    });
+                });
+
+                if(input){
+                    str += input;
+                }else{
+                    str.substr(0, str.length - 1);
+                }
+
+                return str;
+            }
         },
         methods: {
             ...mapMutations([
@@ -185,9 +204,11 @@
             async initData() {
                 //checkout，需要newArr作为参数，遍历shopCart取出newArr
                 let newArr = [];
+                
                 Object.values(this.shopCart).forEach(category => {
                     Object.values(category).forEach(item => {
                         Object.values(item).forEach(food => {
+                            if(!food) return;
                             newArr.push({
                                 attrs: [],
                                 extra: {},
@@ -203,7 +224,6 @@
                         })
                     })
                 })
-
                 this.checkoutData = await checkoutData(this.geohash, [newArr], this.shopId);
                 this.initAddress();
                 this.showLoading = false;                
@@ -254,14 +274,17 @@
                     geohash: this.geohash,
                 })
 
-                let res = await confirmOrder(this.userInfo.user_id, this,checkoutData.cart.id, this.chosenAddress.id, this.shopId, this.geohash, this.remark, this.checkoutData.cart.groups);
+                let res = await confirmOrder(this.userInfo.user_id, this.checkoutData.cart.id, this.chosenAddress.id, this.shopId, this.geohash, this.remark, this.checkoutData.cart.groups);
                 //第一次下单需要验证手机号
                 if(res.need_validation) {
                     this.$router.push('/comfirmOrder/userValidation');
-                }else{
+                }else if(res.success){
                     //成功下单记录后返回信息，跳转支付页
                     this.ORDER_SUCCESS(res);    
                     this.$router.push('/confirmOrder/payment');
+                }else{
+                    this.showAlert = true;
+                    this.alertText = res.message;
                 }
             }
         },
@@ -327,7 +350,7 @@
                     fill: $blue;
                     height: .8rem;
                     width: .8rem;
-                    margin-right: .2rem;
+                    margin-right: .4rem;
                 }
                 .no_address{
                     font-size: .7rem;
@@ -335,19 +358,21 @@
                 }
                 .address{
                     header{
-                        span{
-                            font-size: .6rem;
-                        }
+                        font-size: .65rem;
                         .name{
                             font-size: .8rem;
                             font-weight: 700;
                         }
                     }
+                    p{
+                        display: flex;
+                        align-items: center;
+                    }
                     .tag{
                         padding: 0 .2rem;
                         font-size: .6rem;
                         line-height: .7rem;
-                        height: .8rem;
+                        height: .7rem;
                         border-radius: .15rem;
                         background: #ff5722;
                         color: #fff;
@@ -416,6 +441,8 @@
                 .more_type{
                     display: flex;
                     align-items: center;
+                    flex: 1;
+                    justify-content: flex-end;
                     .way{
                         font-size: .6rem;
                         color: #aaa;

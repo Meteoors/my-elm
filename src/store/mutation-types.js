@@ -21,5 +21,7 @@ export const RECORD_BUILDING = 'RECORD_BUILDING'
 export const CHOOSE_ADDRESS = 'CHOOSE_ADDRESS'
 export const SAVE_ORDER = 'SAVE_ORDER'
 export const ORDER_SUCCESS = 'ORDER_SUCCESS'
+export const SAVE_REMARK = 'SAVE_REMARK'
+
 
 

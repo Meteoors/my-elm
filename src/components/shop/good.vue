@@ -295,7 +295,8 @@
         padding-bottom: 2rem;
         position: relative;
         .nav{
-            width: 3.8rem;
+            flex: 0 0 3.8rem;
+            overflow: hidden;
             .nav_ul{
                 li{
                     height: 2.7rem;
@@ -341,8 +342,8 @@
         }
 
         .good_wrapper{
-            flex: 1 0 auto;
-            overflow: auto;
+            flex: 1 0;
+            overflow: hidden;
             .type_ul{
                 .type_li{
                     .type_head{

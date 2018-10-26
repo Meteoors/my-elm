@@ -22,9 +22,9 @@
                 </li>
             </ul>
             
-            <section id='out_reach' v-if='deliverDisable'>
+            <section id='out_reach' v-if='deliverDisable.length'>
                 <header>以下地址超出配送范围</header>
-                <ul class='address_ul' v-if='deliverable.length'>
+                <ul class='address_ul'>
                     <li class='address_li' v-for='(item, index) in deliverDisable' :key='index'>
                         <svg class='select'>
                             <use xlik:href='#select'></use>
@@ -77,6 +77,24 @@
                 }else{
                     return 0;
                 }
+            },
+            deliverable() {
+                let arr = [];
+                this.addressList.forEach(item => {
+                    if(item.is_deliverable){
+                        arr.push(item);
+                    }
+                });
+                return arr;
+            },
+            deliverDisable() {
+                let arr = [];
+                this.addressList.forEach(item => {
+                    if(!item.is_deliverable){
+                        arr.push(item);
+                    }
+                });
+                return arr;
             }
         },
         methods: {
