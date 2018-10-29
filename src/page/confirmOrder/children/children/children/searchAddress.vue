@@ -3,7 +3,7 @@
 </template>
 
 <script>
-    import addDetail from '../../../../../../components/common/addDetail';
+    import addDetail from '../../../../../components/common/addDetail';
 
     export default {
         components: {
@@ -11,4 +11,3 @@
         }
     }
 </script>
-

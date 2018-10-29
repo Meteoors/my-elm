@@ -3,7 +3,7 @@
         <section v-if='!showLoading'>
             <head-top go-back='true' head-title='确认订单' login='true'></head-top>
 
-            <router-link to='/confirmOrder/chooseAddress' class='address_wrapper'>
+            <router-link :to='{path: "/confirmOrder/chooseAddress", query:{shopId, geohash}}' class='address_wrapper'>
                 <div class='left'>
                     <svg class='location'>
                         <use xlink:href='#location'></use>
@@ -152,7 +152,6 @@
                 shopId: null,
                 imgBaseUrl,
                 checkoutData: null,
-                remark: '',
                 showPayWay: false,
                 payWayId: 1,
                 shopCart: null,
@@ -205,6 +204,7 @@
                 //checkout，需要newArr作为参数，遍历shopCart取出newArr
                 let newArr = [];
                 
+                console.log(this.shopCart);
                 Object.values(this.shopCart).forEach(category => {
                     Object.values(category).forEach(item => {
                         Object.values(item).forEach(food => {
@@ -225,7 +225,7 @@
                     })
                 })
                 this.checkoutData = await checkoutData(this.geohash, [newArr], this.shopId);
-                this.initAddress();
+                await this.initAddress();
                 this.showLoading = false;                
             },
             async initAddress() {
@@ -307,12 +307,13 @@
         bottom: 0;
         z-index: 40;
         background: #f5f5f5;
-        padding-top : 1.8rem;
+        padding-top : 1.9rem;
         padding-bottom: 3rem;
         overflow: auto;
         
         .slide-enter, .slide_leave-to{
             transform: translateX(2rem);
+            opacity: 0;
         }
         .slide-enter-active, .slide-leave-active{
             transition: all .4s;

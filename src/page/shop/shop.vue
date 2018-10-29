@@ -59,7 +59,7 @@
                 <header class='title'>
                     <span>优惠信息</span>
                 </header>
-                <ul class='activities_ul'>
+                <ul class='activities_ul' v-if='shopDetail.activities.length'>
                     <li v-for='(item, index) in shopDetail.activities' :key='index'>
                         <span class='icon' :style='{backgroundColor: "#" + item.icon_color}'>{{item.icon_name}}</span>
                         <span class='text'>{{item.description}}（APP专享）</span>

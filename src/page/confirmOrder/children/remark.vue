@@ -61,7 +61,7 @@
     }
 </script>
 
-<style lang='scss'>
+<style lang='scss' scoped>
     #remark{
         position: fixed;
         left: 0;

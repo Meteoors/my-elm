@@ -22,6 +22,8 @@ const add = r => require.ensure([], () => r(require('../page/profile/children/ch
 const addDetail = r => require.ensure([], () => r(require('../page/profile/children/children/children/children/addDetail')), 'addDetail')
 const confirmOrder = r => require.ensure([], () => r(require('../page/confirmOrder/confirmOrder')), 'confirmOrder')
 const chooseAddress = r => require.ensure([], () => r(require('../page/confirmOrder/children/chooseAddress')), 'chooseAddress')
+const addAddress = r => require.ensure([], () => r(require('../page/confirmOrder/children/children/addAddress')), 'addAddress')
+const searchAddress = r => require.ensure([], () => r(require('../page/confirmOrder/children/children/children/searchAddress')), 'searchAddress')
 
 
 
@@ -106,7 +108,15 @@ export default new Router({
       component: confirmOrder,
       children: [{
         path: 'chooseAddress',
-        component: chooseAddress
+        component: chooseAddress,
+        children: [{
+          path: 'addAddress',
+          component: addAddress,
+          children: [{
+            path: 'searchAddress',
+            component: searchAddress
+          }]
+        }]
       }]
     }
   ]

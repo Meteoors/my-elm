@@ -133,6 +133,7 @@
 
         .slide-enter, .slide-leave-to{
             transform: translateX(2rem);
+            opacity: 0;
         }
         .slide-enter-active, .slide-leave-active{
             transition: all .4s;
