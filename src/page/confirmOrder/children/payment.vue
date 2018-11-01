@@ -39,7 +39,7 @@
 <script>
     import headTop from '../../../components/head/header';
     import alertTip from '../../../components/common/alert';
-import { mapState, mapMutations } from 'vuex';
+    import { mapState, mapMutations } from 'vuex';
 
     export default {
         data() {
