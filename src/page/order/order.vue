@@ -5,7 +5,7 @@
         <ul class='order_ul'>
             <li class='order_li' v-for='(order, index) in orderlist' :key='index'>             
                 <img :src='imgBaseUrl + order.restaurant_image_url'>
-                <div class='detail'>
+                <div class='detail' @click="showDetail(order)">
                     <div class='top'>
                         <div class='title'>
                             <h4 class='name'>
@@ -43,7 +43,7 @@
     import footGuide from '../../components/foot/footer';
     import computeTime from '../../components/common/computeTime';
     import { orderList } from '../../service/getData';
-    import { mapState } from 'vuex';
+    import { mapState, mapMutations } from 'vuex';
     import {imgBaseUrl} from '../../config/env';
 
     export default {
@@ -71,8 +71,15 @@
             ])
         },
         methods: {
+            ...mapMutations([
+                'SAVE_ORDERDETAIL'
+            ]),
             changePayment(index) {
                 this.paymentStatus[index] = '支付超时';
+            },
+            showDetail(order) {
+                this.SAVE_ORDERDETAIL(order);
+                this.$router.push('order/orderDetail');
             }
         }
     }

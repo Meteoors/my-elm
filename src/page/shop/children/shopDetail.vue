@@ -237,9 +237,9 @@
             img{
                 width: 100%;
                 position: absolute;
-                left: 0;
+                left: 50%;
                 top: 50%;
-                transform: translateX(-50%);
+                transform: translate(-50%, -50%);
             }
         }
 

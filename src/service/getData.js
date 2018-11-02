@@ -166,4 +166,7 @@ export const confirmOrder = (user_id, cart_id, address_id, restaurant_id, geohas
 }, 'POST')
 
 //remark页获取备注信息
-export const getRemark = cart_id => fetch('/v1/carts/' + cart_id +'/remarks');
+export const getRemark = cart_id => fetch('/v1/carts/' + cart_id +'/remarks')
+
+//orderDetail页获取订单详情
+export const getOrderDetail = (user_id, order_id) => fetch('/bos/v1/users/' + user_id + '/orders/' + order_id + '/snapshot')

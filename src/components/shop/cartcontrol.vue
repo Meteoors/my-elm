@@ -1,14 +1,14 @@
 <template>
     <div class='cart_control'>
         <transition name='roll'>
-            <svg @click.stop='reduceCart' v-show='num'>
+            <svg @click.stop='reduceCart' v-show='num' class='reduce'>
                 <use xlink:href='#cart-minus'></use>
             </svg>
         </transition>
         <transition name='fade'>
             <div class='num' v-show='num'>{{num}}</div>
         </transition>
-        <svg @click.stop='addCart($event)'>
+        <svg @click.stop='addCart($event)' class='add'>
             <use xlink:href='#cart-add'></use>
         </svg>
     </div>
@@ -48,8 +48,8 @@
                 this.RECORD_SPEC(food);
                 this.RECORD_SHOWSPEC(true);
             },
-            addCart(event) {
-                if(this.item.specifications.length){    //多规格商品通知good组件显示多规格选择框
+            addCart(event) {        
+                if(this.item.specifications && this.item.specifications.length){    //多规格商品通知good组件显示多规格选择框
                     this.showSpecsList(this.item);      //父组件为good，且选中食物为多规格
                 }else{
                     if(this.parent == 'good'){      //父组件为good，选中食物为单规格
@@ -62,7 +62,8 @@
                         name = this.item.name,
                         price = this.item.price || this.item.specfoods[0].price,
                         specs = '',
-                        packing_fee = this.item.packing_fee || this.item.specfoods[0].packing_fee,
+                        // packing_fee = this.item.packing_fee || this.item.specfoods[0].packing_fee,
+                        packing_fee = 0,
                         stock = this.item.stock || this.item.specfoods[0].stock;
 
                     this.ADD_CART({shop_id, category_id, item_id, food_id, name, price, specs, packing_fee, stock});
@@ -76,7 +77,7 @@
                         category_id = this.item.category_id,
                         item_id = this.item.item_id,
                         food_id = this.item.food_id || this.item.specfoods[0].food_id;
-
+                    
                     this.REDUCE_CART({shop_id, category_id, item_id, food_id});
                 }
             }
@@ -105,6 +106,13 @@
             fill: #3190e8;
             width: .9rem;
             height: .9rem;
+            padding: .6rem 0;
+        }
+        .reduce{
+            padding-left: .6rem;
+        }
+        .add{
+            padding-right: .6rem;
         }
         .num{
             font-size: .65rem;

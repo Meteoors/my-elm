@@ -23,7 +23,9 @@
                                 <div class='specs' v-if='food.specs'>{{food.specs}}</div>
                             </div>
                             <span class='price'>￥{{food.price}}</span>
-                            <cart-control parent='shopcart' :item='food'></cart-control>
+                            <div class='control_wrapper'>
+                                <cart-control parent='shopcart' :item='food'></cart-control>
+                            </div>
                         </li>
                     </ul>
                 </section>
@@ -205,13 +207,14 @@
             .right{
                 width: 5rem;
                 display: flex;
-                justify-content: center;
-                align-items: center;
                 background: #535356;
                 span{
                     font-size: .7rem;
                     font-weight: 700;
                     color: #fff;
+                    line-height: 2rem;
+                    width: 100%;
+                    text-align: center;
                 }
             }
             .pay_active{
@@ -267,10 +270,11 @@
                         padding: .65rem 0;                        
                         display: flex;
                         align-items: center;
+                        justify-content: space-between;
                         border-bottom: 1px solid #eceff1;
+                        position: relative;
                         .description{
-                            flex: 1;
-                            padding-right: .1rem;
+                            width: 7rem;
                             display: flex;
                             flex-direction: column;
                             .name{
@@ -292,7 +296,11 @@
                             font-size: .7rem;
                             font-weight: 700;
                             color: #f60;
-                            padding-right: 1.3rem;
+                            margin-right: 4.1rem;
+                        }
+                        .control_wrapper{
+                            @include ct;
+                            right: -.6rem;
                         }
                     }
                     li:last-child{

@@ -57,6 +57,7 @@
         z-index: 28;
         background: #fff;
         padding-top: 1.9rem;
+        padding-bottom: 3rem;
 
         .wrapper{
             .avatar{

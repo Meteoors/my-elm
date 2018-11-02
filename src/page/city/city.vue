@@ -75,9 +75,11 @@
             //判断缓存的搜索历史记录中是否有当前地址，如果没有则添加
             //如果有则不重复添加，判断完成后进入下一页
             nextpage(index, geohash) {
+                alert('begin!')
                 let choosePlace = this.placelist[index];
                 let history = getStore('placeHistory'); //从缓存里取出历史记录，为JSON字符串
                 
+                alert('111');
                 if(history){
                     let repeat = false;  //默认为不重复
                     this.placeHistory = JSON.parse(history);
@@ -93,7 +95,9 @@
                     this.placeHistory.push(choosePlace);
                 }
 
+                alert('yes!');
                 setStore('placeHistory', this.placeHistory) //重置缓存
+                alert('before push')
                 this.$router.push({path: '/msite', query: {geohash}}); //下一页
             },
             //从缓存里清除搜索历史，更新页面

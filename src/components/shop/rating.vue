@@ -84,7 +84,7 @@
                 tagName: '',
                 showLoading: false,
                 offset: 0,
-                preventRepeatRequest: false
+                preventRepeatRequest: false //防止重复请求
             }
         },
         props: ['tab'],
@@ -113,7 +113,7 @@
                         probeType: 3,
                         click: true
                     });
-                    console.log(this.scroll.maxScrollY);
+                    // console.log(this.scroll.maxScrollY);
                     this.scroll.on('scroll', (pos) => {
                         if(Math.abs(pos.y) >= Math.abs(this.scroll.maxScrollY)){
                             this.loadMore();

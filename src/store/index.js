@@ -23,7 +23,8 @@ const state = {
     chosenAddress: null, //confirmOrder页默认地址
     orderParam: null,  //订单参数
     orderMessage: null,  //下单成功返回信息
-    remark: null    //备注信息
+    remark: null,   //备注信息
+    orderDetail: null  //订单详情
 }
 
 export default new Vuex.Store({

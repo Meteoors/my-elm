@@ -23,7 +23,7 @@
                             <img :src="imgBaseUrl + good.image_path" class='avatar'>
                             <div class='detail'>
                                 <h4 class='title'>
-                                    <span class='name'>{{good.name}}</span>
+                                    <span class='name ellipsis'>{{good.name}}</span>
                                     <ul class='icon_ul'>
                                         <li class='icon_li' :class='{new: icon.icon_name == "新"}' :style="{borderColor:'#'+icon.icon_color}" v-for='(icon, index) in good.attributes' :key='index'>
                                             <p :style="{color: icon.icon_name=='新' ? '#fff' : '#' + icon.icon_color}">
@@ -45,9 +45,10 @@
                                 <div class='price'>
                                     <span class='num'>￥{{good.specfoods[0].price}}</span>
                                     <span v-if='good.specifications.length'>起</span>
-                                    <div class='cart_conrtol_wrapper'>
-                                        <cart-control :item='good' parent='good' @drop='drop' @showReduce='showReduce'></cart-control>
-                                    </div>
+                                </div>
+
+                                <div class='cart_control_wrapper'>
+                                    <cart-control :item='good' parent='good' @drop='drop' @showReduce='showReduce'></cart-control>
                                 </div>
                             </div>
                         </router-link>
@@ -388,6 +389,7 @@
                                         font-size: .7rem;
                                         line-height: .95rem;
                                         font-weight: bold;
+                                        max-width: 6.5rem;
                                     }
                                     .icon_ul{
                                         display: flex;
@@ -464,10 +466,15 @@
                                         font-size: .7rem;
                                         line-height: .7rem;
                                     }
-                                    .cart_conrtol_wrapper{
-                                        @include ct;
-                                        right: 0;
-                                    }
+                                    // .cart_control_wrapper{
+                                    //     @include ct;
+                                    //     right: 0;
+                                    // }
+                                }
+                                .cart_control_wrapper{
+                                    position: absolute;
+                                    right: 0;
+                                    bottom: -.1rem;
                                 }
                             }
                         }

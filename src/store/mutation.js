@@ -22,7 +22,8 @@ import {
     CHOOSE_ADDRESS,
     SAVE_ORDER,
     ORDER_SUCCESS,
-    SAVE_REMARK
+    SAVE_REMARK,
+    SAVE_ORDERDETAIL
 } from './mutation-types'
 
 import {setStore, getStore} from '../config/mUtils'
@@ -117,12 +118,12 @@ export default {
     //移出购物车
     [REDUCE_CART](state, {shop_id, category_id, item_id, food_id}) {
         let cart = state.buyCart;
-        let item= state.buyCart[shop_id][category_id][item_id]
+        let item= cart[shop_id][category_id][item_id]
 
         if(item[food_id]['num'] == 1){
             item[food_id] = null
         }else{
-            item[food.id]['num'] --
+            item[food_id]['num'] --
         }
 
         state.buyCart = {...cart};
@@ -190,7 +191,7 @@ export default {
         console.log(111)
     },
 
-    //订单状态存入vuex
+    //下单后返回信息存入vuex
     [ORDER_SUCCESS](state, message){
         state.orderMessage = message
     },
@@ -198,5 +199,10 @@ export default {
     //备注存入vuex
     [SAVE_REMARK](state, remark){
         state.remark = remark
+    },
+
+    //订单详情存入vuex
+    [SAVE_ORDERDETAIL](state, detail){
+        state.orderDetail = detail
     }
 }
