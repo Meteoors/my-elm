@@ -92,7 +92,7 @@
         },
         methods: {
             ...mapMutations([
-                'SAVE_ADDERSS', 'CHOOSE_ADDRESS'
+                'SAVE_ADDRESS', 'CHOOSE_ADDRESS'
             ]),
             chooseSex(sex) {
                 this.sex = sex;

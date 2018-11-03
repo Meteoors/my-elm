@@ -24,7 +24,7 @@
                             <div class='detail'>
                                 <h4 class='title'>
                                     <span class='name ellipsis'>{{good.name}}</span>
-                                    <ul class='icon_ul'>
+                                    <ul class='icon_ul' v-if='good.attributes.length'>
                                         <li class='icon_li' :class='{new: icon.icon_name == "新"}' :style="{borderColor:'#'+icon.icon_color}" v-for='(icon, index) in good.attributes' :key='index'>
                                             <p :style="{color: icon.icon_name=='新' ? '#fff' : '#' + icon.icon_color}">
                                                 {{icon.icon_name == '新' ? '新品' : icon.icon_name}}

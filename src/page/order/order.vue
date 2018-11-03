@@ -35,6 +35,10 @@
         </ul>
 
         <foot-guide parent='order'></foot-guide>
+
+        <transition name='slide'>
+            <router-view></router-view>
+        </transition>
     </div>
 </template>
 
@@ -95,6 +99,15 @@
         p, span, h4{
             font-family: Helvetica Neue,Tahoma,Arial;
         }
+
+        .slide-enter, .slide-leave-to{
+            transform: translateX(2rem);
+            opacity: 0;
+        }
+        .slide-enter-active, .slide-leave-active{
+            transition: all .4s;
+        }
+
         .order_ul{
             .order_li{
                 background: #fff;

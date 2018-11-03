@@ -1,6 +1,6 @@
 <template>
     <div id='invoice'>
-        <head-top go-back='true' head-title='选择发票抬头'>
+        <head-top go-back='true' head-title='选择发票抬头'></head-top>
 
         <div class='no_invoice' @click='toggleInvoice'>
             <span>不需要开发票</span>

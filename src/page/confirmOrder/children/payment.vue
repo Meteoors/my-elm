@@ -12,7 +12,7 @@
         <section class='payWay'>
             <div class='item' :class='{active: payWay == 1}' @click='payWay = 1'>
                 <div class='icon_wrapper'>
-                    <img src="../../../images/zhifubao">
+                    <img src="../../../images/zhifubao.png">
                     <span>支付宝</span>
                 </div>
                 <svg>
@@ -21,7 +21,7 @@
             </div>
             <div class='item' :class='{active: payWay == 2}' @click='payWay = 2'>
                 <div class='icon_wrapper'>
-                    <img src="../../../images/weixin">
+                    <img src="../../../images/weixin.png">
                     <span>微信</span>
                 </div>
                 <svg>
