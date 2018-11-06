@@ -164,7 +164,9 @@
             this.geohash = this.$route.query.geohash;
             this.shopId = this.$route.query.shopId;
 
+            alert('before init buycart')
             this.INIT_BUYCART();    //从localStorage取出buyCart
+            alert('after init buycart')
             this.shopCart = this.buyCart[this.shopId];  //取得当前购物车信息
             alert('created!');
             
