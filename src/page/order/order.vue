@@ -27,8 +27,8 @@
                         </ul>
                     </div>
                     <div class='bottom'>
-                        <compute-time :time='order.time_pass' v-if='paymentStatus[index] == "等待支付"' @changePayment='changePayment(index)'></compute-time>
-                        <router-link class='one_more' to='/shop' v-else tag='span'>再来一单</router-link>
+                        <compute-time :time='order.time_pass' v-if='paymentStatus[index] == "等待支付"' @changePayment='changePayment(index)' @click.native.stop></compute-time>
+                        <router-link class='one_more' :to='{path: "/shop", query: {geohash, id: order.restaurant_id}}' v-else tag='span' @click.native.stop>再来一单</router-link>
                     </div>
                 </div>
             </li>
@@ -58,11 +58,8 @@
                 paymentStatus: []
             }
         },
-        async created() {
-            this.orderlist = await orderList(this.userInfo.user_id);
-            this.paymentStatus = this.orderlist.map((item) => {
-                return item.status_bar.title;
-            })
+        created() {
+            this.init();
         },
         components: {
             headTop,
@@ -71,19 +68,32 @@
         },
         computed: {
             ...mapState([
-                'userInfo'
+                'userInfo', 'geohash'
             ])
         },
         methods: {
             ...mapMutations([
                 'SAVE_ORDERDETAIL'
             ]),
+            async init() {
+                if(this.userInfo){
+                    this.orderlist = await orderList(this.userInfo.user_id);
+                    this.paymentStatus = this.orderlist.map((item) => {
+                        return item.status_bar.title;
+                    })
+                }
+            },
             changePayment(index) {
                 this.paymentStatus[index] = '支付超时';
             },
             showDetail(order) {
                 this.SAVE_ORDERDETAIL(order);
                 this.$router.push('order/orderDetail');
+            }
+        },
+        watch: {
+            userInfo() {
+                this.init();
             }
         }
     }

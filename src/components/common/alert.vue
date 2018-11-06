@@ -70,8 +70,10 @@
         .text{
             margin-top: .8rem;
             font-size: .7rem;
-            line-height: .9rem;
-            color: #333;
+            line-height: 1rem;
+            color: #666;
+            text-align: center;
+            max-width: 8rem;
         }
         .btn{
             margin-top: .8rem;

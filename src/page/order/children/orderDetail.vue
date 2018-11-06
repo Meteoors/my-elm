@@ -9,7 +9,7 @@
         </section>
 
         <section class='food'>
-            <router-link class='head' tag='div' :to='{path: "shop", query: {geohash, id: orderDetail.restaurant_id}}'>
+            <router-link class='head' tag='div' :to='{path: "/shop", query: {geohash, id: orderDetail.restaurant_id}}'>
                 <img :src="imgBaseUrl + orderDetail.restaurant_image_url">
                 <span class='name'>{{orderDetail.restaurant_name}}</span>
                 <svg>
@@ -34,14 +34,14 @@
                 <span>￥{{orderDetail.basket.packing_fee.price}}</span>
             </div>
 
-            <div class='total'>实付{{orderDetail.total_amount}}</div>
+            <div class='total'>实付{{orderDetail.total_amount.toFixed(2)}}</div>
         </section>
 
-        <section class='info'>
+        <section class='info' v-if='orderData'>
             <header>配送信息</header>
             <p>送达时间：{{orderData.deliver_time}}</p>
             <div class='address'>
-                <span class='left'>送货地址</span>
+                <span class='left'>送货地址：</span>
                 <div class='right'>
                     <p>{{orderData.consignee}}</p>
                     <p>{{orderData.phone}}</p>
@@ -113,7 +113,9 @@
         right: 0;
         padding-top: 1.9rem;
         background: #f5f5f5;
-        z-index: 20;
+        z-index: 100;
+        overflow: auto;
+        padding-bottom: 1rem;
 
         .overview{
             background: #fff;
@@ -171,23 +173,23 @@
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
-                    line-height: 2rem;
+                    line-height: 1.8rem;
                     .name{
                         font-size: .6rem;
                         color: #666;
-                        max-width: 8rem;
+                        max-width: 8.5rem;
                     }
                     .right{
                         display: flex;
                         align-items: center;
                         justify-content: space-between;
-                        width: 5rem;
+                        width: 3.5rem;
                         font-size: .6rem;
                         .price{
-                            color: #ccc;
+                            color: #666;
                         }
                         .num{
-                            color: #666;
+                            color: #ccc;
                         }
                     }
                 }
@@ -197,7 +199,7 @@
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                line-height: 2rem;
+                line-height: 1.8rem;
                 padding: 0 .5rem;
                 font-size: .6rem;
                 span{
@@ -239,6 +241,7 @@
                 }
                 .right p{
                     padding: 0;
+                    line-height: .9rem;
                 }
             }
         }

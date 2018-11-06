@@ -91,7 +91,7 @@
                     </div>
                 </router-link>
 
-                <router-link to='/comfirmOrder/invoice' class='item'>
+                <router-link to='/confirmOrder/invoice' class='item'>
                     <span class='title'>发票抬头</span>
                     <div class='detail'>
                         <span>不需要开发票</span>
@@ -190,7 +190,7 @@
                 if(input){
                     str += input;
                 }else{
-                    str.substr(0, str.length - 1);
+                    str = str.substring(0, str.length - 1);
                 }
 
                 return str;
@@ -571,6 +571,7 @@
                         font-size: .6rem;
                         color: #aaa;
                         margin-right: .3rem;
+                        max-width: 3.6rem;
                     }
                     svg{
                         fill: #ccc;

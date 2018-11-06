@@ -2,11 +2,11 @@
     <div id='remark'>
         <head-top go-back='true' head-title='订单备注'></head-top>
 
-        <section class='tag' v-if='tagList.length'>
+        <section class='tag' v-if='tagList'>
             <header>快速备注</header>
             <ul class='type_ul'>
-                <li class='type_li' v-for='(item, index) in tagList' :key='index'>
-                    <span v-for="(tag, tagIndex) in item" :key='tagIndex' @click='chooseTag(index, tagIndex, tag)'>{{tag}}</span>
+                <li class='type_li' v-for='(item, index) in tagList.remarks' :key='index'>
+                    <span v-for="(tag, tagIndex) in item" :key='tagIndex' :class='{active: classObj[index] == tagIndex}' @click='chooseTag(index, tagIndex, tag)'>{{tag}}</span>
                 </li>
             </ul>
         </section>
@@ -30,11 +30,12 @@
             return {
                 tagList: null,
                 remarkText: {},
-                inputText: null
+                inputText: null,
+                classObj: {}
             }
         },
         created() {
-            init();
+            this.init();
         },
         components: {
             headTop
@@ -49,6 +50,7 @@
             },
             chooseTag(index, tagIndex, tag){
                 this.remarkText[index] = {tagIndex: tag};
+                this.$set(this.classObj, index, tagIndex);
             },
             confirmRemark() {
                 this.SAVE_REMARK({
@@ -80,18 +82,24 @@
                 font-size: .65rem;
             }
             .type_ul{
+                display: flex;
+                flex-wrap: wrap;
                 li{
-                    float: left;
                     border: 1px solid #3190e8;
                     border-radius: .2rem;
-                    display: flex;
                     margin: 0 .6rem .6rem 0;
+                    display: flex;
                     span{
+                        display: inline-block;
                         border-right: 1px solid #3190e8;
                         padding: 0 .6rem;
                         font-size: .6rem;
                         line-height: 1.2rem;
                         height: 1.2rem;
+                    }
+                    .active{
+                        background: #3190e8;
+                        color: #fff;
                     }
                     span:last-child{
                         border: none;
@@ -116,7 +124,7 @@
                 padding: .5rem;
                 font-size: .6rem;
                 color: #666;
-                background: #e9e9e9;
+                background: #f9f9f9;
             }
         }
 

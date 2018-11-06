@@ -21,7 +21,7 @@
     	</svg>
 
         <div class='foot_nav'>
-            <div class='item' @click="go({path: '/msite', query:{geohash}})">
+            <div class='item' @click="go({path: '/msite', query: {geohash}})">
                 <svg class='icon'>
                     <use :xlink:href="parent=='msite' ? '#msiteActive':'#msite' "></use>
                 </svg>
@@ -33,7 +33,7 @@
                 </svg>
                 <div class='text'>搜索</div>
             </div>
-            <div class='item' @click="go({path: '/order'})">
+            <div class='item' @click="go({path: '/order', query: {geohash}})">
                 <svg class='icon'>
                     <use :xlink:href="parent=='order' ? '#orderActive':'#order' "></use>
                 </svg>
