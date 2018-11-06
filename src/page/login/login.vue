@@ -97,6 +97,7 @@
                 }
 
                 //获取用户信息,返回值正确将用户信息存入vuex，否则弹出提示框
+                alert(this.userAccount + ',' + this.password + ',' + this.verification);
                 this.userInfo = await accountLogin(this.userAccount, this.password, this.verification);
                 if(!this.userInfo.user_id){  
                     this.alertText = this.userInfo.message;

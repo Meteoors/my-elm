@@ -223,7 +223,7 @@
                         })
                     })
                 })
-                alert(newArr[0].name+this.geohash+','+this.shopId)
+                alert(JSON.stringify(newArr));
                 this.checkoutData = await checkoutData(this.geohash, [newArr], this.shopId);
                 alert(this.checkoutData.message+this.checkoutData.sig)
                 await this.initAddress();
