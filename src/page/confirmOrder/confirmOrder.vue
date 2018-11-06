@@ -166,6 +166,7 @@
 
             this.INIT_BUYCART();    //从localStorage取出buyCart
             this.shopCart = this.buyCart[this.shopId];  //取得当前购物车信息
+            alert('created!');
             
             await this.initData();
         },
@@ -204,7 +205,7 @@
                 //checkout，需要newArr作为参数，遍历shopCart取出newArr
                 let newArr = [];
                 
-                console.log(this.shopCart);
+                alert('brfore initData');
                 Object.values(this.shopCart).forEach(category => {
                     Object.values(category).forEach(item => {
                         Object.values(item).forEach(food => {
@@ -224,12 +225,16 @@
                         })
                     })
                 })
+                alert('before checkoutData')
                 this.checkoutData = await checkoutData(this.geohash, [newArr], this.shopId);
+                alert('checkoutData finish!')
                 await this.initAddress();
                 this.showLoading = false;                
             },
             async initAddress() {
+                alert('initAddress begin')
                 if(this.userInfo && this.userInfo.user_id){ //确保userInfo初始化成功后再请求数据（watch）
+                    alert('before getAddress')
                     let res = await getAddress(this.userInfo.user_id);
                     if(res instanceof Array && res.length){
                         this.CHOOSE_ADDRESS(res[0]);
