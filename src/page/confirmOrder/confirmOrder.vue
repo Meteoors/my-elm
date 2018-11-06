@@ -164,11 +164,8 @@
             this.geohash = this.$route.query.geohash;
             this.shopId = this.$route.query.shopId;
 
-            alert('before init buycart')
             this.INIT_BUYCART();    //从localStorage取出buyCart
-            alert('after init buycart')
             this.shopCart = this.buyCart[this.shopId];  //取得当前购物车信息
-            alert('created!');
             
             await this.initData();
         },
@@ -227,10 +224,11 @@
                         })
                     })
                 })
-                alert('before checkoutData')
+                alert(newArr[0].name)
                 this.checkoutData = await checkoutData(this.geohash, [newArr], this.shopId);
-                alert('checkoutData finish!')
+                alert(this.checkoutData.sig)
                 await this.initAddress();
+                alert('finish!')
                 this.showLoading = false;                
             },
             async initAddress() {
