@@ -204,7 +204,6 @@
                 //checkout，需要newArr作为参数，遍历shopCart取出newArr
                 let newArr = [];
                 
-                alert('brfore initData');
                 Object.values(this.shopCart).forEach(category => {
                     Object.values(category).forEach(item => {
                         Object.values(item).forEach(food => {
@@ -224,9 +223,9 @@
                         })
                     })
                 })
-                alert(newArr[0].name)
+                alert(newArr[0].name+this.geohash+','+this.shopId)
                 this.checkoutData = await checkoutData(this.geohash, [newArr], this.shopId);
-                alert(this.checkoutData.sig)
+                alert(this.checkoutData.message+this.checkoutData.sig)
                 await this.initAddress();
                 alert('finish!')
                 this.showLoading = false;                

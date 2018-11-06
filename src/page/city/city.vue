@@ -93,9 +93,7 @@
                     this.placeHistory.push(choosePlace);
                 }
 
-                alert('yes!');
                 setStore('placeHistory', this.placeHistory) //重置缓存
-                alert('before push')
                 this.$router.push({path: '/msite', query: {geohash}}); //下一页
             },
             //从缓存里清除搜索历史，更新页面
