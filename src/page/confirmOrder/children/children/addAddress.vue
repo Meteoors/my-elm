@@ -98,7 +98,7 @@
                 this.sex = sex;
             },
             async confirm() {
-                if(!this.userInfo.user_id){
+                if(!this.userInfo){
                     this.showAlert = true;
                     this.alertText = '请登录';
                     return

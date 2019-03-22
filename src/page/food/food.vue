@@ -222,9 +222,6 @@
         },
         mixins: [getImgPath],
         methods: {
-            print() {
-                console.log(1);
-            },
             async init() {
                 this.restaurant_category_id = this.categoryData.restaurant_category_id;
                 this.restaurant_category_ids = this.categoryData.restaurant_category_ids;

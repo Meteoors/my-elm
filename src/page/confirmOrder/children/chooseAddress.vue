@@ -5,8 +5,8 @@
         <section class='address_wrapper'>
             <ul class='address_ul' v-if='deliverable.length'>
                 <li class='address_li' v-for='(item, index) in deliverable' :key='index' @click='chooseAddress(item)'>
-                    <svg class='select' :class='{default_icon: chosenAddress.id == item.id}'>
-                        <use xlik:href='#select'></use>
+                    <svg class='select' :class='{default_icon: chosenAddress? chosenAddress.id == item.id : false}'>
+                        <use xlink:href='#select'></use>
                     </svg>                
                     <div class='right'>
                         <header>
@@ -62,22 +62,11 @@
     import headTop from '../../../components/head/header';
 
     export default {
-        data() {
-            return {
-                
-            }
-        },
+        
         computed: {
             ...mapState([
                 'addressList', 'chosenAddress'
             ]),
-            defaultIndex() {
-                if(this.chosenIndex){
-                    return this.chosenIndex;
-                }else{
-                    return 0;
-                }
-            },
             deliverable() {
                 let arr = [];
                 this.addressList.forEach(item => {
@@ -107,7 +96,7 @@
                     case '学校': return '#3190e8';
                 }
             },
-            chooseAddress(address, index){
+            chooseAddress(address){
                 this.CHOOSE_ADDRESS(address); //选中地址存入vuex
                 this.$router.go(-1);
             }
@@ -162,7 +151,7 @@
                         font-size: .6rem;
                     }
                     .name{
-                        font-size: .8rem;
+                        font-size: .75rem;
                         font-weight: 700;
                     }
                 }

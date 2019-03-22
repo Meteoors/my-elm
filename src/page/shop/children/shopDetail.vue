@@ -87,9 +87,9 @@
                 imgBaseUrl
             }
         },
-        async created() {
-            this.detail = await getShopDetail(this.shopId);
-        },
+        // async created() {
+        //     this.detail = await getShopDetail(this.shopId);
+        // },
         computed: {
             ...mapState([
                 'shopId', 'shopDetail'
